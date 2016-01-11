@@ -1,0 +1,56 @@
+DistrictRepository => Class
+  - collections, creates individual districts
+  - .find_by_name:
+    - creates an instance of a district if it exists
+    - otherwise returns nil
+  - .find_all_matching:
+    - can find partial district name matches, returns them in an array
+    - else returns []
+  - .load_data:
+    - arg is a nested hash
+    - pulls in data from csv
+    - return a hash of district names?
+
+District => Class
+  - individual "Location"
+  - contains attributes: enrollment, statewide_testing, economic_profile
+  - .name:
+    - returns the upcased string name of the district
+
+EnrollmentRepository => Class
+ - .find_by_name:
+   - creates an instance of enrollment if it exists
+   - otherwise returns nil
+
+Enrollment => Class
+  - .kindergarten_participation_by_year
+    - returns a hash with years as keys and a 3-digit floating point number %
+  - .kindergarten_participation_in_a_year
+    - takes in year as a parameter
+    - an unknown year returns nil
+    - returns the percentage for that year
+
+Decomposing Headcount with Horace
+  - Get feedback
+    - TDD
+    - Use pry
+    - Use test fixtures to speed up testing
+      - might miss edge cases
+      - how does it know what files to read?
+      - Constraints on how to feed in data
+      - needs to be easy to use
+  - Verify Assumptions
+    - What are the assumptions about this data?
+    - Use tests and pry
+    - What is the input?
+    - "type annotations" - make notes on what args are:
+      def pizza(arg)
+      # arg: hash w/ keys topping, price
+      # return:
+    - trace objects through code
+    - use fetch method on hash
+      - use hash.fetch(:horace) instead of hash[:horace]
+      - if :horac is not in the hash, hash.fetch(:horac) raises a key error, but hash[:horac] returns nil
+  - Pay attention to connections
+    - how different objects connect to each other
+  - Dream-Driven Development
