@@ -1,6 +1,8 @@
 require 'csv'
 require 'pry'
 require 'set'
+require 'district'
+
 class DistrictRepository
   attr_reader :districts,
               :unique_data
