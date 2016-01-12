@@ -1,5 +1,5 @@
-require 'district_repository'
-require 'test_helper'
+require_relative 'district_repository'
+require_relative 'test_helper'
 
 class DistrictRepositoryTest < Minitest::Test
 
