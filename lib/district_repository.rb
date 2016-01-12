@@ -1,8 +1,8 @@
 $LOAD_PATH.unshift(File.expand_path('.',__dir__))
 require 'csv'
 require 'set'
-require 'district'
-require 'data_loader'
+require_relative 'district'
+require_relative 'data_loader'
 
 class DistrictRepository
   attr_reader :districts
