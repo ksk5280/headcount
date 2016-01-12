@@ -2,21 +2,31 @@ require 'csv'
 require 'pry'
 require 'set'
 class DistrictRepository
-  attr_reader :districts
+  attr_reader :districts,
+              :unique_data
+
 
   def load_data(data)
     data = CSV.open "#{data.fetch(:enrollment).fetch(:kindergarten)}", headers: true, header_converters: :symbol
-    unique_data = Set.new
+    @districts = Set.new
 
     data.each do |row|
-    unique_data << row[:location]
+    districts << row[:location].upcase
     end
+    # districts is a set of unique district names
+  end
 
-    @districts = unique_data.map do |location|
-      District.new({:name => location})
+  def find_by_name(name)
+    if districts.include?(name=name.upcase)
+      District.new({:name => name})
+    else
+      nil
     end
   end
 
+  # def find_all_matching(name_fragment)
+  #   if districts.include?(name_fragment )
+  # end
 end
 #
 # dr = DistrictRepository.new

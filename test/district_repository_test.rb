@@ -12,13 +12,49 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_it_can_find_by_name
-    skip
     dr = DistrictRepository.new
     dr.load_data({:enrollment => {
                     :kindergarten => "test/fixtures/kindergarten_fixture.csv"}
                   })
     district = dr.find_by_name("ACADEMY 20")
-    assert_equal
+    assert_equal "ACADEMY 20", district.name
+  end
+
+  def test_it_can_find_by_name_lower_case_names
+    dr = DistrictRepository.new
+    dr.load_data({:enrollment => {
+                    :kindergarten => "test/fixtures/kindergarten_fixture.csv"}
+                  })
+    district = dr.find_by_name("Colorado")
+    assert_equal "COLORADO", district.name
+  end
+
+  def test_returns_nil_if_district_is_not_found
+    dr = DistrictRepository.new
+    dr.load_data({:enrollment => {
+                    :kindergarten => "test/fixtures/kindergarten_fixture.csv"}
+                  })
+    district = dr.find_by_name("PIZZA")
+    assert_nil district
+  end
+
+  def test_it_can_find_by_name_and_create_an_instance_of_an_object
+    dr = DistrictRepository.new
+    dr.load_data({:enrollment => {
+                    :kindergarten => "test/fixtures/kindergarten_fixture.csv"}
+                  })
+    district = dr.find_by_name("ACADEMY 20")
+    msg = "Expected district to be a class of District"
+    assert district.instance_of?(District), msg
+  end
+
+  def test_finds_all_matching_districts_using_name_fragment
+    dr = DistrictRepository.new
+    dr.load_data({:enrollment => {
+                    :kindergarten => "test/fixtures/kindergarten_fixture.csv"}
+                  })
+    district_array = dr.find_all_matching("ACA")
+    assert_equal ["ACADEMY 20"], district_array
   end
 
 end
