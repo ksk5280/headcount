@@ -7,13 +7,12 @@ class DistrictRepository
   attr_reader :districts,
               :unique_data
 
-
   def load_data(data)
     data = CSV.open "#{data.fetch(:enrollment).fetch(:kindergarten)}", headers: true, header_converters: :symbol
     @districts = Set.new
 
     data.each do |row|
-    districts << row[:location].upcase
+      districts << row[:location].upcase
     end
     # districts is a set of unique district names
   end
@@ -35,10 +34,4 @@ class DistrictRepository
     end
     matching_districts
   end
-
 end
-#
-# dr = DistrictRepository.new
-# dr.load_data({:enrollment => {
-#                           :kindergarten => "test/fixtures/kindergarten_fixture.csv"}
-#                         })

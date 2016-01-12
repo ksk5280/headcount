@@ -1,7 +1,7 @@
 {
   "RSpec": {
     "coverage": {
-      "/Users/davidwhitaker/turing/1module/projects/headcount/test/district_test.rb": [
+      "/Users/kimiko/Documents/Turing/1module/projects/headcount/test/district_test.rb": [
         1,
         1,
         null,
@@ -13,7 +13,7 @@
         null,
         null
       ],
-      "/Users/davidwhitaker/turing/1module/projects/headcount/test/enrollment_repository_test.rb": [
+      "/Users/kimiko/Documents/Turing/1module/projects/headcount/test/enrollment_repository_test.rb": [
         1,
         1,
         null,
@@ -55,7 +55,7 @@
         null,
         null
       ],
-      "/Users/davidwhitaker/turing/1module/projects/headcount/lib/enrollment_repository.rb": [
+      "/Users/kimiko/Documents/Turing/1module/projects/headcount/lib/enrollment_repository.rb": [
         1,
         1,
         1,
@@ -63,7 +63,6 @@
         null,
         1,
         1,
-        null,
         null,
         null,
         1,
@@ -85,8 +84,9 @@
         null,
         null
       ],
-      "/Users/davidwhitaker/turing/1module/projects/headcount/lib/enrollment.rb": [
+      "/Users/kimiko/Documents/Turing/1module/projects/headcount/lib/enrollment.rb": [
         1,
+        null,
         1,
         1,
         null,
@@ -108,7 +108,7 @@
         null,
         null
       ],
-      "/Users/davidwhitaker/turing/1module/projects/headcount/test/enrollment_test.rb": [
+      "/Users/kimiko/Documents/Turing/1module/projects/headcount/test/enrollment_test.rb": [
         1,
         1,
         null,
@@ -149,13 +149,13 @@
         null,
         null
       ],
-      "/Users/davidwhitaker/turing/1module/projects/headcount/test/test_helper.rb": [
+      "/Users/kimiko/Documents/Turing/1module/projects/headcount/test/test_helper.rb": [
         1,
         1,
         1,
         1
       ]
     },
-    "timestamp": 1452573835
+    "timestamp": 1452579597
   }
 }

@@ -1,4 +1,5 @@
 require 'pry'
+
 class Enrollment
   attr_reader :name,
               :kindergarten_participation
