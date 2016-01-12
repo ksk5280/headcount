@@ -6,7 +6,6 @@ require 'data_loader'
 class DistrictRepository
   attr_reader :districts
 
-
   def load_data(data)
     @districts = DataLoader.new.load_csv(data)
   end
@@ -28,5 +27,4 @@ class DistrictRepository
     end
     matching_districts
   end
-
 end

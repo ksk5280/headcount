@@ -1,12 +1,12 @@
 DistrictRepository => Class
   - collections, creates individual districts
-  - .find_by_name:
+  - .find_by_name(name)
     - creates an instance of a district if it exists
     - otherwise returns nil
-  - .find_all_matching:
+  - .find_all_matching(partial_name)
     - can find partial district name matches, returns them in an array
     - else returns []
-  - .load_data:
+  - .load_data(arg)
     - arg is a nested hash
     - pulls in data from csv
     - return a hash of district names?

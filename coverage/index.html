@@ -14,7 +14,7 @@
       <img src="./assets/0.10.0/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" style="display:none;">
-      <div class="timestamp">Generated <abbr class="timeago" title="2016-01-12T13:33:12-07:00">2016-01-12T13:33:12-07:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2016-01-12T13:45:42-07:00">2016-01-12T13:45:42-07:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
@@ -63,7 +63,7 @@
       <tr>
         <td class="strong"><a href="#fa068dd30e8d953125ed570601395e6ca8ef0020" class="src_link" title="lib/district_repository.rb">lib/district_repository.rb</a></td>
         <td class="green strong">100.0 %</td>
-        <td>32</td>
+        <td>30</td>
         <td>17</td>
         <td>17</td>
         <td>0</td>
@@ -73,7 +73,7 @@
       <tr>
         <td class="strong"><a href="#6be010c2a8dec7c56b303ac00ed8dc1430c25a5f" class="src_link" title="lib/enrollment.rb">lib/enrollment.rb</a></td>
         <td class="green strong">100.0 %</td>
-        <td>21</td>
+        <td>22</td>
         <td>11</td>
         <td>11</td>
         <td>0</td>
@@ -83,7 +83,7 @@
       <tr>
         <td class="strong"><a href="#034964d9c055290e92c803bdf073afa817c1398e" class="src_link" title="lib/enrollment_repository.rb">lib/enrollment_repository.rb</a></td>
         <td class="green strong">100.0 %</td>
-        <td>21</td>
+        <td>20</td>
         <td>11</td>
         <td>11</td>
         <td>0</td>
@@ -284,145 +284,133 @@
           <code class="ruby"></code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="9">
-          
-          
-          <code class="ruby"></code>
-        </li>
-      
-        <li class="covered" data-hits="1" data-linenumber="10">
+        <li class="covered" data-hits="1" data-linenumber="9">
           <span class="hits">1</span>
           
           <code class="ruby">  def load_data(data)</code>
         </li>
       
-        <li class="covered" data-hits="9" data-linenumber="11">
+        <li class="covered" data-hits="9" data-linenumber="10">
           <span class="hits">9</span>
           
           <code class="ruby">    @districts = DataLoader.new.load_csv(data)</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="12">
+        <li class="never" data-hits="" data-linenumber="11">
           
           
           <code class="ruby">  end</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="13">
+        <li class="never" data-hits="" data-linenumber="12">
           
           
           <code class="ruby"></code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="14">
+        <li class="covered" data-hits="1" data-linenumber="13">
           <span class="hits">1</span>
           
           <code class="ruby">  def find_by_name(name)</code>
         </li>
       
-        <li class="covered" data-hits="4" data-linenumber="15">
+        <li class="covered" data-hits="4" data-linenumber="14">
           <span class="hits">4</span>
           
           <code class="ruby">    if districts.include?(name=name.upcase)</code>
         </li>
       
-        <li class="covered" data-hits="3" data-linenumber="16">
+        <li class="covered" data-hits="3" data-linenumber="15">
           <span class="hits">3</span>
           
           <code class="ruby">      District.new({:name =&gt; name})</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="17">
+        <li class="never" data-hits="" data-linenumber="16">
           
           
           <code class="ruby">    else</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="18">
+        <li class="never" data-hits="" data-linenumber="17">
           
           
           <code class="ruby">      nil</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="19">
+        <li class="never" data-hits="" data-linenumber="18">
           
           
           <code class="ruby">    end</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="19">
+          
+          
+          <code class="ruby">  end</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="20">
           
           
-          <code class="ruby">  end</code>
-        </li>
-      
-        <li class="never" data-hits="" data-linenumber="21">
-          
-          
           <code class="ruby"></code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="22">
+        <li class="covered" data-hits="1" data-linenumber="21">
           <span class="hits">1</span>
           
           <code class="ruby">  def find_all_matching(name_fragment)</code>
         </li>
       
-        <li class="covered" data-hits="4" data-linenumber="23">
+        <li class="covered" data-hits="4" data-linenumber="22">
           <span class="hits">4</span>
           
           <code class="ruby">    matching_districts = []</code>
         </li>
       
-        <li class="covered" data-hits="4" data-linenumber="24">
+        <li class="covered" data-hits="4" data-linenumber="23">
           <span class="hits">4</span>
           
           <code class="ruby">    districts.each do |district|</code>
         </li>
       
-        <li class="covered" data-hits="8" data-linenumber="25">
+        <li class="covered" data-hits="8" data-linenumber="24">
           <span class="hits">8</span>
           
           <code class="ruby">      if district.include?(name_fragment.upcase)</code>
         </li>
       
-        <li class="covered" data-hits="3" data-linenumber="26">
+        <li class="covered" data-hits="3" data-linenumber="25">
           <span class="hits">3</span>
           
           <code class="ruby">        matching_districts &lt;&lt; district</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="27">
+        <li class="never" data-hits="" data-linenumber="26">
           
           
           <code class="ruby">      end</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="28">
+        <li class="never" data-hits="" data-linenumber="27">
           
           
           <code class="ruby">    end</code>
         </li>
       
-        <li class="covered" data-hits="4" data-linenumber="29">
+        <li class="covered" data-hits="4" data-linenumber="28">
           <span class="hits">4</span>
           
           <code class="ruby">    matching_districts</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="30">
+        <li class="never" data-hits="" data-linenumber="29">
           
           
           <code class="ruby">  end</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="31">
-          
-          
-          <code class="ruby"></code>
-        </li>
-      
-        <li class="never" data-hits="" data-linenumber="32">
+        <li class="never" data-hits="" data-linenumber="30">
           
           
           <code class="ruby">end</code>
@@ -452,121 +440,127 @@
           <code class="ruby">require &#39;pry&#39;</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="2">
-          <span class="hits">1</span>
+        <li class="never" data-hits="" data-linenumber="2">
           
-          <code class="ruby">class Enrollment</code>
+          
+          <code class="ruby"></code>
         </li>
       
         <li class="covered" data-hits="1" data-linenumber="3">
           <span class="hits">1</span>
           
-          <code class="ruby">  attr_reader :name,</code>
+          <code class="ruby">class Enrollment</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="4">
+        <li class="covered" data-hits="1" data-linenumber="4">
+          <span class="hits">1</span>
           
-          
-          <code class="ruby">              :kindergarten_participation</code>
+          <code class="ruby">  attr_reader :name,</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="5">
           
           
+          <code class="ruby">              :kindergarten_participation</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="6">
+          
+          
           <code class="ruby"></code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="6">
+        <li class="covered" data-hits="1" data-linenumber="7">
           <span class="hits">1</span>
           
           <code class="ruby">  def initialize(data)</code>
         </li>
       
-        <li class="covered" data-hits="6" data-linenumber="7">
+        <li class="covered" data-hits="6" data-linenumber="8">
           <span class="hits">6</span>
           
           <code class="ruby">    @name = data[:name]</code>
         </li>
       
-        <li class="covered" data-hits="6" data-linenumber="8">
+        <li class="covered" data-hits="6" data-linenumber="9">
           <span class="hits">6</span>
           
           <code class="ruby">    @kindergarten_participation = data[:kindergarten_participation]</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="9">
+        <li class="never" data-hits="" data-linenumber="10">
           
           
           <code class="ruby">  end</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="10">
+        <li class="never" data-hits="" data-linenumber="11">
           
           
           <code class="ruby"></code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="11">
+        <li class="covered" data-hits="1" data-linenumber="12">
           <span class="hits">1</span>
           
           <code class="ruby">  def kindergarten_participation_by_year</code>
         </li>
       
-        <li class="covered" data-hits="2" data-linenumber="12">
+        <li class="covered" data-hits="2" data-linenumber="13">
           <span class="hits">2</span>
           
           <code class="ruby">    kindergarten_participation.each do |k, v|</code>
         </li>
       
-        <li class="covered" data-hits="6" data-linenumber="13">
+        <li class="covered" data-hits="6" data-linenumber="14">
           <span class="hits">6</span>
           
           <code class="ruby">      kindergarten_participation[k] = (v * 1000).floor / 1000.0</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="14">
+        <li class="never" data-hits="" data-linenumber="15">
           
           
           <code class="ruby">    end</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="15">
+        <li class="never" data-hits="" data-linenumber="16">
           
           
           <code class="ruby">    #returns a hash with keys as years and values as truncated percentage</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="16">
+        <li class="never" data-hits="" data-linenumber="17">
           
           
           <code class="ruby">  end</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="17">
+        <li class="never" data-hits="" data-linenumber="18">
           
           
           <code class="ruby"></code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="18">
+        <li class="covered" data-hits="1" data-linenumber="19">
           <span class="hits">1</span>
           
           <code class="ruby">  def kindergarten_participation_in_year(year)</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="19">
+        <li class="covered" data-hits="1" data-linenumber="20">
           <span class="hits">1</span>
           
           <code class="ruby">    kindergarten_participation_by_year.fetch(year)</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="20">
+        <li class="never" data-hits="" data-linenumber="21">
           
           
           <code class="ruby">  end</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="21">
+        <li class="never" data-hits="" data-linenumber="22">
           
           
           <code class="ruby">end</code>
@@ -638,79 +632,73 @@
           <code class="ruby"></code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="9">
-          
-          
-          <code class="ruby"></code>
-        </li>
-      
-        <li class="covered" data-hits="1" data-linenumber="10">
+        <li class="covered" data-hits="1" data-linenumber="9">
           <span class="hits">1</span>
           
           <code class="ruby">  def load_data(data)</code>
         </li>
       
-        <li class="covered" data-hits="4" data-linenumber="11">
+        <li class="covered" data-hits="4" data-linenumber="10">
           <span class="hits">4</span>
           
           <code class="ruby">    @districts = DataLoader.new.load_csv(data)</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="12">
+        <li class="never" data-hits="" data-linenumber="11">
           
           
           <code class="ruby">  end</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="13">
+        <li class="never" data-hits="" data-linenumber="12">
           
           
           <code class="ruby"></code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="14">
+        <li class="covered" data-hits="1" data-linenumber="13">
           <span class="hits">1</span>
           
           <code class="ruby">  def find_by_name(name)</code>
         </li>
       
-        <li class="covered" data-hits="3" data-linenumber="15">
+        <li class="covered" data-hits="3" data-linenumber="14">
           <span class="hits">3</span>
           
           <code class="ruby">    if districts.include?(name=name.upcase)</code>
         </li>
       
-        <li class="covered" data-hits="2" data-linenumber="16">
+        <li class="covered" data-hits="2" data-linenumber="15">
           <span class="hits">2</span>
           
           <code class="ruby">      Enrollment.new({:name =&gt; name})</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="17">
+        <li class="never" data-hits="" data-linenumber="16">
           
           
           <code class="ruby">    else</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="18">
+        <li class="never" data-hits="" data-linenumber="17">
           
           
           <code class="ruby">      nil</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="19">
+        <li class="never" data-hits="" data-linenumber="18">
           
           
           <code class="ruby">    end</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="20">
+        <li class="never" data-hits="" data-linenumber="19">
           
           
           <code class="ruby">  end</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="21">
+        <li class="never" data-hits="" data-linenumber="20">
           
           
           <code class="ruby">end</code>

@@ -6,7 +6,6 @@ require 'data_loader'
 class EnrollmentRepository
   attr_reader :districts
 
-
   def load_data(data)
     @districts = DataLoader.new.load_csv(data)
   end
