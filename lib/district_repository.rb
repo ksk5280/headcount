@@ -24,9 +24,16 @@ class DistrictRepository
     end
   end
 
-  # def find_all_matching(name_fragment)
-  #   if districts.include?(name_fragment )
-  # end
+  def find_all_matching(name_fragment)
+    matching_districts = []
+    districts.each do |district|
+      if district.include?(name_fragment.upcase)
+        matching_districts << district
+      end
+    end
+    matching_districts
+  end
+
 end
 #
 # dr = DistrictRepository.new

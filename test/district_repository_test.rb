@@ -57,4 +57,30 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal ["ACADEMY 20"], district_array
   end
 
+  def test_returns_empty_array_if_no_matches_are_found
+    dr = DistrictRepository.new
+    dr.load_data({:enrollment => {
+                    :kindergarten => "test/fixtures/kindergarten_fixture.csv"}
+                  })
+    district_array = dr.find_all_matching("dadsfasfafasasfdasfdsa")
+    assert_equal [], district_array
+  end
+
+  def test_finds_all_matching_districts_using_lowercase_name_fragment
+    dr = DistrictRepository.new
+    dr.load_data({:enrollment => {
+                    :kindergarten => "test/fixtures/kindergarten_fixture.csv"}
+                  })
+    district_array = dr.find_all_matching("aca")
+    assert_equal ["ACADEMY 20"], district_array
+  end
+
+  def test_result_is_upcased_even_if_original_location_is_not
+    dr = DistrictRepository.new
+    dr.load_data({:enrollment => {
+                    :kindergarten => "test/fixtures/kindergarten_fixture.csv"}
+                  })
+    district_array = dr.find_all_matching("colo")
+    assert_equal ["COLORADO"], district_array
+  end
 end
