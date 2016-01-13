@@ -14,9 +14,9 @@ class Enrollment
 
   def kindergarten_participation_by_year
     kindergarten_participation.each do |k, v|
-      kindergarten_participation[k] = (v * 1000).floor / 1000.0
+      kindergarten_participation[k] = v.round(3)
     end
-    #returns a hash with keys as years and values as truncated percentage
+    # returns a hash with keys as years and values as truncated percentage
   end
 
   def kindergarten_participation_in_year(year)
