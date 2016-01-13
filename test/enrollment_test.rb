@@ -19,6 +19,20 @@ class EnrollmentTest < Minitest::Test
     assert_equal expected, e.kindergarten_participation
   end
 
+  def test
+    er = EnrollmentRepository.new
+    er.load_data({
+                   :enrollment => {
+                     :kindergarten => "test/fixtures/kindergarten_fixture.csv"
+                   }
+                 })
+    name = "ACADEMY 20"
+    enrollment = er.find_by_name(name)
+    assert_equal name, enrollment.name
+    assert enrollment.is_a?(Enrollment)
+    assert_in_delta 0.144, enrollment.kindergarten_participation_in_year(2004), 0.005
+  end
+
   def test_kindergarten_returns_a_hash_of_years_as_keys_and_3_digit_float_as_value
     e = Enrollment.new({:name => "ACADEMY 20",
                              :kindergarten_participation => {

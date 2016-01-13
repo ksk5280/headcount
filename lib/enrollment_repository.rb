@@ -1,7 +1,7 @@
 require 'csv'
 require 'set'
-require 'enrollment'
-require 'data_loader'
+require_relative 'enrollment'
+require_relative 'data_loader'
 
 class EnrollmentRepository
   attr_reader :districts
