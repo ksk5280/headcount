@@ -15,10 +15,8 @@ class EnrollmentRepository
     if enrollments.has_key?(name)
       Enrollment.new({
         :name => name,
-        :kindergarten_participation => enrollments[name]
+        :kindergarten_participation => enrollments.fetch(name)
       })
-    else
-      nil
     end
   end
 end
@@ -31,4 +29,5 @@ if __FILE__ == $0
     }
   })
   puts er.enrollments
+  puts er.find_by_name("ACADEMY 20")
 end

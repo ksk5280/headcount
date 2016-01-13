@@ -31,34 +31,32 @@ class DistrictRepository
         :name => name,
         :enrollment => enrollment_repository.find_by_name(name)
       })
-      # Enrollment.new(data)
-    else
-      nil
     end
   end
 
   def find_all_matching(name_fragment)
-    # could try regex instead of include. which is faster?
-    matching_districts = []
-    districts.each_key do |district|
-      if district.include?(name_fragment.upcase)
-        matching_districts << district
-      end
+    matching_districts = districts.select do |district, _v|
+      district.include?(name_fragment.upcase)
     end
-    matching_districts
+    matching_districts.keys
   end
 end
 
 if __FILE__ == $0
   dr = DistrictRepository.new
-  start = Time.now
-  dr.load_data({
+  # start = Time.now
+  # district = dr.find_by_name("COLORADO")
+  # p district.enrollment
+  file = "test/fixtures/kindergarten_edge_cases.csv"
+  # file = "data/Kindergartners in full-day program.csv"
+  puts dr.load_data({
     :enrollment => {
-      :kindergarten => "data/Kindergartners in full-day program.csv"
+      :kindergarten => file
     }
   })
-  p "number of districs = #{dr.districts.count}"
-  finish = Time.now
-  p "time (s): #{finish - start}"
-  p dr.find_by_name("Colorado").enrollment.kindergarten_participation_in_year(2010)
+  # p "number of districs = #{dr.districts.count}"
+  # finish = Time.now
+  # p "time (s): #{finish - start}"
+  # p dr.find_by_name("Colorado")
+  #   .enrollment.kindergarten_participation_in_year(2010)
 end
