@@ -4,17 +4,31 @@ require_relative 'enrollment'
 require_relative 'data_loader'
 
 class EnrollmentRepository
-  attr_reader :districts
+  attr_reader :enrollments
 
   def load_data(data)
-    @districts = DataLoader.new.load_csv(data)
+    @enrollments = DataLoader.new.load_csv(data, 'enrollments')
   end
 
   def find_by_name(name)
-    if districts.include?(name=name.upcase)
-      Enrollment.new({:name => name})
+    name = name.upcase
+    if enrollments.has_key?(name)
+      Enrollment.new({
+        :name => name,
+        :kindergarten_participation => enrollments[name]
+      })
     else
       nil
     end
   end
+end
+
+if __FILE__ == $0
+  er = EnrollmentRepository.new
+  er.load_data({
+    :enrollment => {
+      :kindergarten => "test/fixtures/kindergarten_fixture.csv"
+    }
+  })
+  puts er.enrollments
 end

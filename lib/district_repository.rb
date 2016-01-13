@@ -20,11 +20,12 @@ class DistrictRepository
   # end
 
   def load_data(data)
-    @districts = DataLoader.new.load_csv(data)
+    @districts = DataLoader.new.load_csv(data, 'districts')
   end
 
   def find_by_name(name)
-    if districts.include?(name=name.upcase)
+    name = name.upcase
+    if districts.include?(name)
       District.new({:name => name})
       # Enrollment.new(data)
     else
