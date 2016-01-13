@@ -26,9 +26,11 @@ GEM
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
+    docile (1.1.5)
     equalizer (0.0.11)
     ice_nine (0.11.1)
     interception (0.5)
+    json (1.8.3)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
     method_source (0.8.2)
@@ -46,6 +48,12 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    pry-rescue (1.4.2)
+      interception (>= 0.5)
+      pry
+    pry-stack_explorer (0.4.9.2)
+      binding_of_caller (>= 0.7)
+      pry (>= 0.9.11)
     rainbow (2.0.0)
     rake (10.4.2)
     reek (3.7.1)
@@ -58,6 +66,11 @@ GEM
     rspec-core (3.4.1)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
+    simplecov (0.11.1)
+      docile (~> 1.1.0)
+      json (~> 1.8)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.0)
     slop (3.6.0)
     thread_safe (0.3.5)
     unparser (0.2.4)
@@ -86,8 +99,11 @@ DEPENDENCIES
   minitest
   mrspec
   pry
+  pry-rescue
+  pry-stack_explorer
   rake
   reek
+  simplecov
 
 BUNDLED WITH
    1.10.6
