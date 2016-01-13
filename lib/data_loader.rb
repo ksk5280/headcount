@@ -1,10 +1,11 @@
 require 'csv'
-require 'pry'
 require 'set'
+require 'pry'
 
 class DataLoader
 
   def load_csv(data)
+    # binding.pry
     data = CSV.open "#{data.fetch(:enrollment).fetch(:kindergarten)}",
                     headers: true, header_converters: :symbol
     districts = Set.new
