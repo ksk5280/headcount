@@ -7,7 +7,7 @@ class DataLoaderTest < Minitest::Test
       :enrollment => {
         :kindergarten => "test/fixtures/kindergarten_fixture.csv"
       }
-    }, 'districts')
+    })
     assert_equal 2, set.count
   end
 end

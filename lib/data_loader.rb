@@ -4,19 +4,19 @@ require 'pry'
 
 class DataLoader
 
-  def load_csv(data, type)
+  def load_csv(data)
     file_name = data.fetch(:enrollment).fetch(:kindergarten)
     data = CSV.open "#{file_name}",
       headers: true,
       header_converters: :symbol
-    if type == 'districts'
-      districts = Set.new
-      data.each do |row|
-        districts << row[:location].upcase
-      end
-      districts
+    # if type == 'districts'
+    #   districts = Set.new
+    #   data.each do |row|
+    #     districts << row[:location].upcase
+    #   end
+    #   districts
       # districts is a set of unique district names
-    elsif type == 'enrollments'
+    # elsif type == 'enrollments'
       enrollments = {}
       data.each do |row|
         district = row[:location].upcase
@@ -34,10 +34,10 @@ class DataLoader
       #   district_B => { year1 => %, year2 => %, ... },
       #   ...
       # }
-    end
+  #   end
   end
 end
 
 if __FILE__ == $0
-  
+
 end

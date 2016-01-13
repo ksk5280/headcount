@@ -7,7 +7,7 @@ class EnrollmentRepository
   attr_reader :enrollments
 
   def load_data(data)
-    @enrollments = DataLoader.new.load_csv(data, 'enrollments')
+    @enrollments = DataLoader.new.load_csv(data)
   end
 
   def find_by_name(name)
