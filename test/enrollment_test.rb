@@ -1,20 +1,25 @@
 require 'enrollment'
+require 'enrollment_repository'
 require 'test_helper'
 
 class EnrollmentTest < Minitest::Test
   def test_it_has_a_name
-    e = Enrollment.new({:name => "ACADEMY 20",
-                             :kindergarten_participation => {
-                               2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677
-                            }})
+    e = Enrollment.new({
+      :name => "ACADEMY 20",
+      :kindergarten_participation => {
+        2010 => 0.3915,
+        2011 => 0.35356,
+        2012 => 0.2677
+      }
+    })
     assert_equal "ACADEMY 20", e.name
   end
 
   def test_it_has_a_hash_of_participation_data
     e = Enrollment.new({:name => "ACADEMY 20",
-                             :kindergarten_participation => {
-                               2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677
-                            }})
+                          :kindergarten_participation => {
+                            2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677
+                        }})
     expected = {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}
     assert_equal expected, e.kindergarten_participation
   end

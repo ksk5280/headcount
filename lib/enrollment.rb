@@ -1,11 +1,15 @@
 $LOAD_PATH.unshift(File.expand_path('.',__dir__))
+require 'enrollment_repository'
+require 'pry'
+
 class Enrollment
   attr_reader :name,
               :kindergarten_participation
 
   def initialize(data)
-    @name = data[:name]
-    @kindergarten_participation = data[:kindergarten_participation]
+    @name = data[:name].upcase
+    @kindergarten_participation =
+      data[:kindergarten_participation]
   end
 
   def kindergarten_participation_by_year
@@ -18,4 +22,7 @@ class Enrollment
   def kindergarten_participation_in_year(year)
     kindergarten_participation_by_year.fetch(year)
   end
+end
+
+if __FILE__ == $0
 end
