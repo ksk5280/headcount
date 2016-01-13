@@ -3,9 +3,21 @@ require 'csv'
 require 'set'
 require_relative 'district'
 require_relative 'data_loader'
+#require_relative 'enrollment_repository'
+#require_relative 'enrollment'
 
 class DistrictRepository
   attr_reader :districts
+
+  #create an enrollment repository when creating a
+  #district repository
+
+  # def enrollment
+  # 
+  #   er = EnrollmentRepository.new
+  #   er.find_by_name
+  #   creates e = Enrollment.new
+  # end
 
   def load_data(data)
     @districts = DataLoader.new.load_csv(data)
@@ -14,6 +26,7 @@ class DistrictRepository
   def find_by_name(name)
     if districts.include?(name=name.upcase)
       District.new({:name => name})
+      # Enrollment.new(data)
     else
       nil
     end
