@@ -2,15 +2,6 @@ require 'district_repository'
 require 'test_helper'
 
 class DistrictRepositoryTest < Minitest::Test
-  # def setup
-  #   @dr = DistrictRepository.new
-  #   @districts = dr.load_data({
-  #     :enrollment => {
-  #       :kindergarten => "test/fixtures/kindergarten_fixture.csv"
-  #     }
-  #   })
-  # end
-
   def test_it_can_take_in_a_file
     dr = DistrictRepository.new
     dr.load_data({
@@ -110,11 +101,13 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal ["COLORADO"], district_array
   end
 
-  def test_what_happens_if_there_is_no_enrollment_key_for_load_data
-    skip
-  end
-
   def test_that_enrollment_repo_instance_is_created_when_data_is_loaded
-    skip
+    dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "test/fixtures/kindergarten_fixture.csv"
+      }
+    })
+    assert_equal EnrollmentRepository, dr.enrollment_repository.class
   end
 end

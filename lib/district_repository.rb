@@ -8,14 +8,13 @@ require_relative 'enrollment'
 class DistrictRepository
   attr_reader :districts, :enrollment_repository
 
-  #create an enrollment repository when creating a
-  #district repository
-
   def load_data(data)
     if data.has_key?(:enrollment)
       @enrollment_repository = EnrollmentRepository.new
       enrollment_repository.load_data(data)
       @districts = enrollment_repository.enrollments
+    else
+      raise ArgumentError, 'data needs :enrollment key'
     end
     # if data.has_key?(:statewide_testing)
     #   @statewide_testing_repository = StatewideTestRepository.new
