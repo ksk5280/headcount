@@ -7,26 +7,28 @@ class EnrollmentRepository
 
   def load_data(data)
     @enrollments = DataLoader.new.load_csv(data)
-  end
+   end
 
   def find_by_name(name)
     name = name.upcase
     if enrollments.has_key?(name)
       Enrollment.new({
         :name => name,
-        :kindergarten_participation => enrollments.fetch(name)
+        :kindergarten_participation => enrollments.fetch(name).fetch(:kindergarten),
+        :high_school_graduation => enrollments.fetch(name)[:high_school_graduation]
       })
     end
   end
 end
-#we want to be able take in another enrollment file 
+#we want to be able take in another enrollment file
 if __FILE__ == $0
   er = EnrollmentRepository.new
   er.load_data({
     :enrollment => {
-      :kindergarten => "test/fixtures/kindergarten_fixture.csv"
+      :kindergarten => "test/fixtures/small_kg_fixture.csv",
+      :high_school_graduation => "test/fixtures/small_hs_fixture.csv"
     }
   })
   puts er.enrollments
-  puts er.find_by_name("ACADEMY 20")
+  puts er.find_by_name("ADAMS COUNTY 14")
 end

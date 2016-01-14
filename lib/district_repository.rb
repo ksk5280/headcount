@@ -12,6 +12,7 @@ class DistrictRepository
       @enrollment_repository = EnrollmentRepository.new
       enrollment_repository.load_data(data)
       @districts = enrollment_repository.enrollments
+      #this makes districts and enrollments the same hash 
     else
       raise ArgumentError, 'data needs :enrollment key'
     end
