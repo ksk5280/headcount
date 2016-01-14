@@ -8,11 +8,15 @@ class DistrictTest < Minitest::Test
     assert_equal "ACADEMY 20", district.name
   end
 
-  def test_can_initialize_with_enrollments
-    skip
-    district = District.new({:name => "ACADEMY 20"}, :enrollment => enrollment_repository.find_by_name("ACADEMY 20"))
-    expected = "something"
-    actual = "something else"
+  def test_it_has_enrollments
+    district = District.new({
+      :name => "ACADEMY 20",
+      :enrollment => { 2010 => 0.436,
+                       2011 => 0.489,
+                       2012 => 0.479}}
+    )
+    expected = {2010=>0.436, 2011=>0.489, 2012=>0.479}
+    actual = district.enrollment
     assert_equal expected, actual
   end
 end
