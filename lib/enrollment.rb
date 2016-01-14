@@ -22,9 +22,19 @@ class Enrollment
     end
     # returns a hash with keys as years and values as truncated percentage
   end
-
+  
   def kindergarten_participation_in_year(year)
     kindergarten_participation_by_year.fetch(year)
+  end
+
+  def graduation_rate_by_year
+    high_school_graduation.each do |k, v|
+      high_school_graduation[k] = v.round(3)
+    end
+  end
+
+  def graduation_rate_in_year(year)
+    graduation_rate_by_year.fetch(year)
   end
 end
 

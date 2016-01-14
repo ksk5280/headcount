@@ -66,7 +66,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     er.load_data({
       :enrollment => {
         :kindergarten => "test/fixtures/small_kg_fixture.csv",
-          :high_school_graduation => "test/fixtures/small_hs_fixture.csv"
+        :high_school_graduation => "test/fixtures/small_hs_fixture.csv"
       }
     })
     assert_equal [2007, 2010], er.enrollments.fetch("COLORADO").keys

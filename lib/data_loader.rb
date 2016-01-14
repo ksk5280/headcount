@@ -1,20 +1,22 @@
 require 'csv'
 require 'pry'
+require 'pry-byebug'
 
 class DataLoader
   attr_reader :enrollments
 
   def load_csv(data)
     #create a block to load each key of enrollment
+    @enrollments = {}
     data.fetch(:enrollment).each_key do |key|
       file_name = data.fetch(:enrollment).fetch(key)
       if File.exist?("#{file_name}") == false
         raise ArgumentError,  "This is not a valid file. Please provide a valid CSV file."
       else
-        data = CSV.open "#{file_name}",
+        file = CSV.open "#{file_name}",
         headers: true,
         header_converters: :symbol
-        enrollments = parse_data(data)
+        enrollments = parse_data(file)
       end
     end
     enrollments
@@ -23,16 +25,12 @@ class DataLoader
   end
 
   def parse_data(data)
-    @enrollments = {}
     data.each do |row|
       district = row[:location].upcase
       year = row[:timeframe].to_i
       percentage = clean_percentage(row[:data])
       create_enrollments_hash(district, year, percentage)
     end
-    # binding.pry
-    puts "parse_data enrollments"
-    puts enrollments
     # enrollments:
     # {
     #   "district_A" => { year1 => %, year2 => %, ... },
