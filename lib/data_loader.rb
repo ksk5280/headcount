@@ -1,14 +1,14 @@
 require 'csv'
 require 'pry'
-require 'pry-byebug'
 
 class DataLoader
-  attr_reader :enrollments
+  attr_reader :enrollments, :school_age
 
   def load_csv(data)
     #create a block to load each key of enrollment
     @enrollments = {}
     data.fetch(:enrollment).each_key do |key|
+      @school_age = key
       file_name = data.fetch(:enrollment).fetch(key)
       if File.exist?("#{file_name}") == false
         raise ArgumentError,  "This is not a valid file. Please provide a valid CSV file."
@@ -20,8 +20,6 @@ class DataLoader
       end
     end
     enrollments
-    # file_name = data.fetch(:enrollment).fetch(:kindergarten)
-    # hs_file_name = data.fetch(:enrollment).fetch(:high_school_graduation)
   end
 
   def parse_data(data)
@@ -31,20 +29,32 @@ class DataLoader
       percentage = clean_percentage(row[:data])
       create_enrollments_hash(district, year, percentage)
     end
-    # enrollments:
-    # {
-    #   "district_A" => { year1 => %, year2 => %, ... },
-    #   "district_B" => { year1 => %, year2 => %, ... },
-    #   ...
-    # }
   end
 
   def create_enrollments_hash(district, year, percentage)
     if !enrollments.has_key?(district)
       enrollments[district] = {}
     end
-    enrollments[district][year] = percentage unless percentage == nil
+    # binding.pry
+
+    if !enrollments[district].has_key?(school_age)
+      enrollments[district][school_age] = {}
+    end
+    # enrollments[district] = { school_age => {} }
+
+    # {:kindergarten=>{}}
+    enrollments[district][school_age][year] = percentage unless percentage == nil
   end
+  # enrollments:
+  # {
+  #   "district_A" => { kindergarten => { year1 => %, year2 => %, ... },
+  #                     high_school  => { year1 => %, year2 => %, ... }
+  #                    }
+  #   "district_B" => { kindergarten => { year1 => %, year2 => %, ... },
+  #                     high_school  => { year1 => %, year2 => %, ... }
+  #                    }
+  #   ...
+  # }
 
   def clean_percentage(percentage)
     # regex => if it's not a number then nil

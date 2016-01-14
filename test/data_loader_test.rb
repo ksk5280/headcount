@@ -45,9 +45,22 @@ class DataLoaderTest < Minitest::Test
     # AGATE 300,2007,Percent,1
     # AGATE 300,2006,Percent,#DIV/0!
 
-    expected = {2007=>1.0}
+    expected = {:kindergarten=>{2007=>1.0}}
     actual = enrollments["AGATE 300"]
     assert_equal expected, actual
+  end
+
+  def test_load_data_can_load_two_files
+    er = EnrollmentRepository.new
+    er.load_data({
+      :enrollment => {
+        :kindergarten => "test/fixtures/small_kg_fixture.csv",
+        :high_school_graduation => "test/fixtures/small_hs_fixture.csv"
+      }
+    })
+    expected = [:kindergarten, :high_school_graduation]
+    assert_equal expected, er.enrollments.fetch("COLORADO").keys
+    assert_equal 2, er.enrollments.fetch("ACADEMY 20").keys.count
   end
 
 end

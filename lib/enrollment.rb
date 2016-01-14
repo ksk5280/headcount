@@ -22,7 +22,7 @@ class Enrollment
     end
     # returns a hash with keys as years and values as truncated percentage
   end
-  
+
   def kindergarten_participation_in_year(year)
     kindergarten_participation_by_year.fetch(year)
   end
@@ -39,4 +39,12 @@ class Enrollment
 end
 
 if __FILE__ == $0
+  er = EnrollmentRepository.new
+  er.load_data({
+    :enrollment => {
+      :kindergarten => "test/fixtures/small_kg_fixture.csv",
+      :high_school_graduation => "test/fixtures/small_hs_fixture.csv"
+    }
+  })
+  er.find_by_name('COLORADO')
 end
