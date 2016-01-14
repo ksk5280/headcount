@@ -1,5 +1,4 @@
 require 'csv'
-require 'set'
 require_relative 'district'
 require_relative 'data_loader'
 require_relative 'enrollment_repository'
