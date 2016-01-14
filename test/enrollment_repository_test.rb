@@ -60,4 +60,16 @@ class EnrollmentRepositoryTest < Minitest::Test
     assert enrollment.is_a?(Enrollment)
     assert_in_delta 0.741, enrollment.kindergarten_participation_in_year(2014), 0.005
   end
+
+  def test_load_data_can_load_two_files
+    er = EnrollmentRepository.new
+    er.load_data({
+      :enrollment => {
+        :kindergarten => "test/fixtures/small_kg_fixture.csv",
+          :high_school_graduation => "test/fixtures/small_hs_fixture.csv"
+      }
+    })
+    assert_equal [2007, 2010], er.enrollments.fetch("COLORADO").keys
+    assert_equal 2, er.enrollments.fetch("ACADEMY 20").keys.count
+  end
 end

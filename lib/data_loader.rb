@@ -5,15 +5,21 @@ class DataLoader
   attr_reader :enrollments
 
   def load_csv(data)
-    file_name = data.fetch(:enrollment).fetch(:kindergarten)
-    if File.exist?("#{file_name}") == false
-      raise ArgumentError,  "This is not a valid file. Please provide a valid CSV file."
-    else
-      data = CSV.open "#{file_name}",
+    #create a block to load each key of enrollment
+    data.fetch(:enrollment).each_key do |key|
+      file_name = data.fetch(:enrollment).fetch(key)
+      if File.exist?("#{file_name}") == false
+        raise ArgumentError,  "This is not a valid file. Please provide a valid CSV file."
+      else
+        data = CSV.open "#{file_name}",
         headers: true,
         header_converters: :symbol
-      parse_data(data)
+        enrollments = parse_data(data)
+      end
     end
+    enrollments
+    # file_name = data.fetch(:enrollment).fetch(:kindergarten)
+    # hs_file_name = data.fetch(:enrollment).fetch(:high_school_graduation)
   end
 
   def parse_data(data)
@@ -24,7 +30,9 @@ class DataLoader
       percentage = clean_percentage(row[:data])
       create_enrollments_hash(district, year, percentage)
     end
-    enrollments
+    # binding.pry
+    puts "parse_data enrollments"
+    puts enrollments
     # enrollments:
     # {
     #   "district_A" => { year1 => %, year2 => %, ... },
@@ -51,10 +59,19 @@ class DataLoader
 end
 
 if __FILE__ == $0
-  dl = DataLoader.new
-  puts dl.load_csv({
+  # dl = DataLoader.new
+  # puts dl.load_csv({
+  #   :enrollment => {
+  #     :kindergarten => "test/fixtures/small_kg_fixture.csv",
+  #     :high_school_graduation => "test/fixtures/small_hs_fixture.csv"
+  #   }
+  # })
+  dl = DataLoader.new.load_csv({
     :enrollment => {
       :kindergarten => "test/fixtures/kindergarten_fixture.csv"
     }
   })
+  puts "enrollments at bottom"
+  puts dl
+  puts dl.count
 end

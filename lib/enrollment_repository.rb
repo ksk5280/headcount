@@ -19,7 +19,7 @@ class EnrollmentRepository
     end
   end
 end
-
+#we want to be able take in another enrollment file 
 if __FILE__ == $0
   er = EnrollmentRepository.new
   er.load_data({
