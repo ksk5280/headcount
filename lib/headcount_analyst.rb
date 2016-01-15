@@ -11,24 +11,24 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_rate_variation(district1_name, compared)
-    district1_average = find_average(district1_name)
+    district1_average = find_average(district1_name, :kindergarten)
     district2_name = compared.fetch(:against)
-    district2_average = find_average(district2_name)
+    district2_average = find_average(district2_name, :kindergarten)
 
     ratio = district1_average / district2_average
   end
 
   def graduation_rate_variation(district1_name, compared)
-    district1_average = find_average(district1_name)
+    district1_average = find_average(district1_name, :high_school_graduation)
     district2_name = compared.fetch(:against)
-    district2_average = find_average(district2_name)
-
+    district2_average = find_average(district2_name, :high_school_graduation)
     ratio = district1_average / district2_average
   end
 
-  def find_average(district_name)
+  def find_average(district_name, school_age)
     #district_repos.districts is a hash of all districts and their participation values { year => percentage }
-    district_participation = district_repos.districts.fetch(district_name).fetch(:kindergarten)
+
+    district_participation = district_repos.districts.fetch(district_name).fetch(school_age)
     district_sum = district_participation.values.reduce(0, :+)
     district_average = district_sum / district_participation.keys.count
   end
@@ -40,7 +40,6 @@ class HeadcountAnalyst
 
     district2_name = compared.fetch(:against)
     d2_participation = district_repos.districts.fetch(district2_name).fetch(:kindergarten)
-    # binding.pry
 
     d1_participation.merge(d2_participation) { |year, d1, d2| ( d1 / d2 ).round(3) }
 
@@ -48,12 +47,12 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_against_high_school_graduation(district_name)
-    # district kindergarten average participation
+    kindergarten_variation = kindergarten_participation_rate_variation(district_name, :against => "COLORADO")
+    graduation_variation = graduation_rate_variation(district_name, :against => "COLORADO")
+    kindergarten_variation / graduation_variation
     # district divided by high_school_graduation average
-
     # Colorado kindergarten average participation
     # Colorado divided by high_school_graduation average
-
   end
 end
 
