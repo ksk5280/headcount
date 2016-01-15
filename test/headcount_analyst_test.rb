@@ -46,4 +46,18 @@ class HeadcountAnalystTest < Minitest::Test
     expected = { 2009 => 0.652, 2010 => 0.681, 2011 => 0.728 }
     assert_equal expected, actual
   end
+
+  def test_can_find_relationship_between_kg_participation_and_hs_graduation
+    skip
+    er = EnrollmentRepository.new
+    er.load_data({
+      :enrollment => {
+        :kindergarten => "test/fixtures/small_kg_fixture.csv",
+        :high_school_graduation => "test/fixtures/small_hs_fixture.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(er)
+    assert_in_delta 0.548, ha.kindergarten_participation_against_high_school_graduation('ADAMS COUNTY'), 0.005
+    assert_in_delta 0.800, ha.kindergarten_participation_against_high_school_graduation('ACADEMY 20'), 0.005
+  end
 end
