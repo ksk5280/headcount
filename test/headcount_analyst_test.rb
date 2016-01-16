@@ -48,16 +48,39 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_can_find_relationship_between_kg_participation_and_hs_graduation
-    skip
-    er = EnrollmentRepository.new
-    er.load_data({
+    dr = DistrictRepository.new
+    dr.load_data({
       :enrollment => {
         :kindergarten => "test/fixtures/small_kg_fixture.csv",
         :high_school_graduation => "test/fixtures/small_hs_fixture.csv"
       }
     })
-    ha = HeadcountAnalyst.new(er)
-    assert_in_delta 0.548, ha.kindergarten_participation_against_high_school_graduation('ADAMS COUNTY'), 0.005
-    assert_in_delta 0.800, ha.kindergarten_participation_against_high_school_graduation('ACADEMY 20'), 0.005
+    ha = HeadcountAnalyst.new(dr)
+    assert_in_delta 0.911, ha.kindergarten_participation_against_high_school_graduation('ADAMS COUNTY 14'), 0.005
+    assert_in_delta 0.803, ha.kindergarten_participation_against_high_school_graduation('ACADEMY 20'), 0.005
+  end
+
+  def test_can_assert_that_there_is_a_correlation_between_kg_participation_and_hs_graduation
+    dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "test/fixtures/small_kg_fixture.csv",
+        :high_school_graduation => "test/fixtures/small_hs_fixture.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+    assert ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
+  end
+
+  def test_can_assert_that_state_has_a_correlation_between_kg_participation_and_hs_graduation
+    dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "test/fixtures/kg_statewide_fixture.csv",
+        :high_school_graduation => "test/fixtures/hs_statewide_fixture.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+    assert ha.kindergarten_participation_correlates_with_high_school_graduation(:for => 'STATEWIDE')
   end
 end

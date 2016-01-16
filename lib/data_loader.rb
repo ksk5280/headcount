@@ -35,7 +35,6 @@ class DataLoader
     if !enrollments.has_key?(district)
       enrollments[district] = {}
     end
-    # binding.pry
 
     if !enrollments[district].has_key?(school_age)
       enrollments[district][school_age] = {}
@@ -44,6 +43,7 @@ class DataLoader
 
     # {:kindergarten=>{}}
     enrollments[district][school_age][year] = percentage unless percentage == nil
+
   end
   # enrollments:
   # {
