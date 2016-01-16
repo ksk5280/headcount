@@ -72,9 +72,7 @@ class HeadcountAnalystTest < Minitest::Test
     assert ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
   end
 
-  meta tag: true
   def test_can_assert_that_state_has_a_correlation_between_kg_participation_and_hs_graduation
-    skip
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
