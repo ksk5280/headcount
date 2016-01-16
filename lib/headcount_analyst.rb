@@ -26,7 +26,7 @@ class HeadcountAnalyst
   end
 
   def find_average(district_name, school_age)
-    #district_repos.districts is a hash of all districts and their participation values { year => percentage }
+    #district_repos.districts is a hash of all districts and their school_age and their participation values { year => percentage }
 
     district_participation = district_repos.districts.fetch(district_name).fetch(school_age)
     district_sum = district_participation.values.reduce(0, :+)
@@ -46,13 +46,23 @@ class HeadcountAnalyst
     #return years with value of ratio between district1 and compared
   end
 
+  def kindergarten_participation_correlates_with_high_school_graduation(district_correlation)
+    district_name = district_correlation.fetch(:for)
+    # if district_name == 'STATEWIDE'
+    #   correlated = district_repos.districts.keys.select do |district|
+    #     return false if district == 'COLORADO'
+    #     kindergarten_participation_correlates_with_high_school_graduation(district)
+    #   end
+    #   return true if correlated.count / district_repos.districts.keys.count > 0.7
+    # else
+      return true if kindergarten_participation_against_high_school_graduation(district_name).between?(0.6, 1.5)
+    # end
+  end
+
   def kindergarten_participation_against_high_school_graduation(district_name)
     kindergarten_variation = kindergarten_participation_rate_variation(district_name, :against => "COLORADO")
     graduation_variation = graduation_rate_variation(district_name, :against => "COLORADO")
     kindergarten_variation / graduation_variation
-    # district divided by high_school_graduation average
-    # Colorado kindergarten average participation
-    # Colorado divided by high_school_graduation average
   end
 end
 
