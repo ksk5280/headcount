@@ -1,13 +1,14 @@
 require_relative 'statewide_test_repository'
+require_relative 'custom_errors'
 
 class StatewideTest
-  attr_reader :name,
+  attr_reader :data,
+              :name,
               :third_grade,
               :eighth_grade,
               :math,
               :reading,
-              :writing,
-              :data
+              :writing
 
   def initialize(data)
     @data         = data
@@ -19,18 +20,20 @@ class StatewideTest
     @writing      = data[:writing]
   end
 
+  RACES = [:all_students, :asian, :black, :hawaiian_pacific_islander, :hispanic, :native_american, :two_or_more, :white]
+
   def proficient_by_grade(grade)
     if grade == 3
       return third_grade
-    elsif
+    elsif grade == 8
       eighth_grade
     else
-      raise UnknownDataError
-      # third_grade.each do |k, v|
+      raise UnknownDataError, 'Unknown grade'
     end
   end
 
   def proficient_by_race_or_ethnicity(race)
+    raise UnknownRaceError unless RACES.include?(race)
     subjects = {:math => math, :reading => reading, :writing => writing}
     race_hash = {}
     subjects.each do |k, v|
@@ -41,7 +44,6 @@ class StatewideTest
         race_hash.fetch(year)[k] = v.fetch(year).fetch(race)
       end
     end
-    race_hash
+  race_hash
   end
-
 end
