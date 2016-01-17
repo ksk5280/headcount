@@ -3,7 +3,7 @@ require 'test_helper'
 
 class DataLoaderTest < Minitest::Test
   def test_data_loader_can_take_in_a_file
-    enrollments = DataLoader.new.load_csv({
+    enrollments = DataLoader.new.load_enrollments_csv({
       :enrollment => {
         :kindergarten => "test/fixtures/kindergarten_fixture.csv"
       }
@@ -11,8 +11,8 @@ class DataLoaderTest < Minitest::Test
     assert_equal 2, enrollments.count
   end
 
-  def test_load_csv_file_and_create_enrollments_keys
-    enrollments = DataLoader.new.load_csv({
+  def test_load_enrollments_csv_file_and_create_enrollments_keys
+    enrollments = DataLoader.new.load_enrollments_csv({
       :enrollment => {
         :kindergarten => "test/fixtures/kindergarten_fixture.csv"
       }
@@ -22,8 +22,8 @@ class DataLoaderTest < Minitest::Test
     assert_equal expected, actual
   end
 
-  def test_load_csv_file_and_create_enrollments_hash
-    enrollments = DataLoader.new.load_csv({
+  def test_load_enrollments_csv_file_and_create_enrollments_hash
+    enrollments = DataLoader.new.load_enrollments_csv({
       :enrollment => {
         :kindergarten => "test/fixtures/kindergarten_fixture.csv"
       }
@@ -34,7 +34,7 @@ class DataLoaderTest < Minitest::Test
   end
 
   def test_does_not_add_info_to_enrollments_hash_if_percentage_is_not_a_number
-    enrollments = DataLoader.new.load_csv({
+    enrollments = DataLoader.new.load_enrollments_csv({
       :enrollment => {
         :kindergarten => "test/fixtures/kindergarten_edge_cases.csv"
       }
