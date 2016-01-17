@@ -18,9 +18,10 @@ A district is only created when you call the ```find_by_name``` method in the ``
   })
   district = dr.find_by_name('COLORADO')
   ```
-* A lot happens when the ```load_data``` method is called:
+* When the ```load_data``` method is called:
   1. An ```EnrollmentRepository``` object is created
-  2. The csv data is loaded by the ```DataLoader``` class 3. The which also parses the data into the hash in the correct format.
+  2. The csv data is loaded by the ```DataLoader``` class
+  3. ```DataLoader``` parses the data into the hash in the correct format.
 * , which creates and enrollments hash into which the data is stored.
 
 
