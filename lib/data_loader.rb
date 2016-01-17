@@ -53,7 +53,7 @@ class DataLoader
         create_enrollments_hash(district, year, percentage)
       elsif type == :statewide_testing
         if !row[:score].nil?
-          subject_or_race = row[:score].downcase
+          subject_or_race = row[:score].downcase.to_sym
         elsif !row[:race_ethnicity].nil?
           subject_or_race = row[:race_ethnicity].downcase
         end
@@ -107,7 +107,7 @@ class DataLoader
     if percentage == 'N/A' || percentage == '#DIV/0!'
       nil
     else
-      percentage.to_f
+      percentage.to_f.round(3)
     end
   end
 

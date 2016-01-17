@@ -29,28 +29,26 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_kindergarten_returns_a_hash_of_years_as_keys_and_3_digit_float_as_value
-    e = Enrollment.new({
-      :name => "ACADEMY 20",
-      :kindergarten_participation => {
-        2010 => 0.3915,
-        2011 => 0.35356,
-        2012 => 0.2677
+    er = EnrollmentRepository.new
+    er.load_data({
+      :enrollment => {
+        :kindergarten => "test/fixtures/kindergarten_fixture.csv"
       }
     })
-    expected = {2010 => 0.392, 2011 => 0.354, 2012 => 0.268}
-    assert_equal expected, e.kindergarten_participation_by_year
+    district = er.find_by_name("ACADEMY 20")
+    expected = {2007=>0.392}
+    assert_equal expected, district.kindergarten_participation_by_year
   end
 
   def test_kindergarten_returns_a_truncated_value_for_specific_year
-    e = Enrollment.new({
-      :name => "ACADEMY 20",
-      :kindergarten_participation => {
-        2010 => 0.3915,
-        2011 => 0.35356,
-        2012 => 0.2677
+    er = EnrollmentRepository.new
+    er.load_data({
+      :enrollment => {
+        :kindergarten => "test/fixtures/kindergarten_fixture.csv"
       }
     })
-    assert_equal 0.392, e.kindergarten_participation_in_year(2010)
+    district = er.find_by_name("ACADEMY 20")
+    assert_equal 0.392, district.kindergarten_participation_in_year(2007)
   end
 
   def test_can_find_high_school_graduation_by_year

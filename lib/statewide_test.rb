@@ -16,4 +16,15 @@ class StatewideTest
     @reading      = data[:reading]
     @writing      = data[:writing]
   end
+
+  def proficient_by_grade(grade)
+    if grade == 3
+      return third_grade
+    elsif
+      eighth_grade
+    else
+      raise UnknownDataError
+      # third_grade.each do |k, v|
+    end
+  end
 end
