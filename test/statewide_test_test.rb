@@ -90,32 +90,32 @@ class StatewideTestTest < Minitest::Test
       2013 => {:math => 0.855, :reading => 0.859, :writing => 0.668},
       2014 => {:math => 0.834, :reading => 0.831, :writing => 0.639}
     }
-    testing = str.find_by_name("ACADEMY 20")
+    swt = str.find_by_name("ACADEMY 20")
     expected.each do |year, data|
       data.each do |subject, proficiency|
-        assert_in_delta proficiency, testing.proficient_by_grade(3)[year][subject], 0.005
+        assert_in_delta proficiency, swt.proficient_by_grade(3)[year][subject], 0.005
       end
     end
   end
 
   def test_raises_unknown_data_error_for_unknown_grade
     str = statewide_repo
-    testing = str.find_by_name("ACADEMY 20")
+    swt = str.find_by_name("ACADEMY 20")
 
     assert_raises(UnknownDataError) do
-      testing.proficient_by_grade(1)
+      swt.proficient_by_grade(1)
     end
   end
 
   def test_can_group_proficiency_by_race
     str = statewide_repo
-    testing = str.find_by_name("ACADEMY 20")
+    swt = str.find_by_name("ACADEMY 20")
     expected = { 2011 => {math: 0.816, reading: 0.897, writing: 0.826},
                  2012 => {math: 0.818, reading: 0.893, writing: 0.808},
                  2013 => {math: 0.805, reading: 0.901, writing: 0.810},
                  2014 => {math: 0.800, reading: 0.855, writing: 0.789},
                }
-    result = testing.proficient_by_race_or_ethnicity(:asian)
+    result = swt.proficient_by_race_or_ethnicity(:asian)
     expected.each do |year, data|
       data.each do |subject, proficiency|
         assert_in_delta proficiency, result[year][subject], 0.005
@@ -127,7 +127,7 @@ class StatewideTestTest < Minitest::Test
                  2013 => {math: 0.440, reading: 0.670, writing: 0.482},
                  2014 => {math: 0.421, reading: 0.704, writing: 0.519},
                }
-    result = testing.proficient_by_race_or_ethnicity(:black)
+    result = swt.proficient_by_race_or_ethnicity(:black)
     expected.each do |year, data|
       data.each do |subject, proficiency|
         assert_in_delta proficiency, result[year][subject], 0.005
@@ -137,10 +137,19 @@ class StatewideTestTest < Minitest::Test
 
   def test_raises_unknown_race_error
     str = statewide_repo
-    testing = str.find_by_name("ACADEMY 20")
+    swt = str.find_by_name("ACADEMY 20")
 
     assert_raises(UnknownRaceError) do
-      testing.proficient_by_race_or_ethnicity(:purple)
+      swt.proficient_by_race_or_ethnicity(:purple)
+    end
+  end
+
+  def test_raises_unknown_data_error_if_subject_is_unknown
+    str = statewide_repo
+    swt = str.find_by_name("ACADEMY 20")
+
+    assert_raises(UnknownDataError) do
+      swt.proficient_for_subject_by_grade_in_year(:history, 8, 2010)
     end
   end
 end
