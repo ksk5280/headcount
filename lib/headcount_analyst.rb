@@ -2,12 +2,12 @@ require_relative 'district_repository'
 require 'pry'
 
 class HeadcountAnalyst
-  attr_accessor :district_repos
+  attr_reader :district_hash
 
-  def initialize(district_repos)
-    @district_repos = district_repos
-    # district_repos is an instance of DistrictRepository
-    # district_repos.districts is a hash of all districts and their school_age and their participation values { year => percentage }
+  def initialize(district_repo)
+    @district_hash = district_repo.districts
+    # district_repo is an instance of DistrictRepository
+    # district_hash is a hash of all districts and their school_age and their participation values { year => percentage }
   end
 
   def kindergarten_participation_rate_variation(district1_name, compared)
@@ -27,17 +27,17 @@ class HeadcountAnalyst
 
   # district_average = for any district the sum the percentages and divide by the total number of percentages
   def find_average(district_name, school_age)
-    district_participation = district_repos.districts.fetch(district_name).fetch(school_age)
+    district_participation = district_hash.fetch(district_name).fetch(school_age)
     district_sum = district_participation.values.reduce(0, :+)
     district_average = district_sum / district_participation.keys.count
   end
 
   def kindergarten_participation_rate_variation_trend(district1_name, compared)
     #find district repo values by year and compare them.
-    d1_participation = district_repos.districts.fetch(district1_name).fetch(:kindergarten)
+    d1_participation = district_hash.fetch(district1_name).fetch(:kindergarten)
 
     district2_name = compared.fetch(:against)
-    d2_participation = district_repos.districts.fetch(district2_name).fetch(:kindergarten)
+    d2_participation = district_hash.fetch(district2_name).fetch(:kindergarten)
 
     d1_participation.merge(d2_participation) { |year, d1, d2| ( d1 / d2 ).round(3) }
 
@@ -46,7 +46,7 @@ class HeadcountAnalyst
 
   def kindergarten_participation_against_high_school_graduation(district_name)
     # note: "EAST YUMA COUNTY RJ-2" and "WEST YUMA COUNTY RJ-1" have no data for kindergarten participation"
-    return 0 if district_repos.districts.fetch(district_name).fetch(:kindergarten).empty? || district_repos.districts.fetch(district_name).fetch(:high_school_graduation).empty?
+    return 0 if district_hash.fetch(district_name).fetch(:kindergarten).empty? || district_hash.fetch(district_name).fetch(:high_school_graduation).empty?
 
     kindergarten_variation = kindergarten_participation_rate_variation(district_name, :against => "COLORADO")
     graduation_variation = graduation_rate_variation(district_name, :against => "COLORADO")
@@ -72,10 +72,10 @@ class HeadcountAnalyst
   end
 
   def correlation_for_statewide
-    correlated = district_repos.districts.keys.select do |district|
+    correlated = district_hash.keys.select do |district|
       kindergarten_participation_correlates_with_high_school_graduation(:for => district) unless district == 'COLORADO'
     end
-    return true if correlated.count / (district_repos.districts.keys.count - 1) > 0.7
+    return true if correlated.count / (district_hash.keys.count - 1) > 0.7
   end
 
   def correlation_across_districts(district_array)

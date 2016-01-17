@@ -2,18 +2,6 @@ require 'headcount_analyst'
 require 'test_helper'
 
 class HeadcountAnalystTest < Minitest::Test
-  def test_it_initializes_with_a_district_repository
-    dr = DistrictRepository.new
-    dr.load_data({
-      :enrollment => {
-        :kindergarten => "./test/fixtures/kindergarten_edge_cases.csv"
-      }
-    })
-    ha = HeadcountAnalyst.new(dr)
-
-    assert_equal DistrictRepository, ha.district_repos.class
-  end
-
   def test_calculates_ratio_of_average_kg_participation_between_districts
     dr = DistrictRepository.new
     dr.load_data({
