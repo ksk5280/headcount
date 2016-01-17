@@ -3,23 +3,27 @@ require_relative 'district'
 require_relative 'data_loader'
 require_relative 'enrollment_repository'
 require_relative 'enrollment'
+require_relative 'statewide_test_repository'
 
 class DistrictRepository
   attr_reader :districts, :enrollment_repository
 
+  def initialize
+    @enrollment_repository = EnrollmentRepository.new
+    @statewide_testing_repository = StatewideTestRepository.new
+  end
+
   def load_data(data)
     if data.has_key?(:enrollment)
-      @enrollment_repository = EnrollmentRepository.new
       enrollment_repository.load_data(data)
       @districts = enrollment_repository.enrollments
-      #this makes districts and enrollments the same hash 
+      #this makes districts and enrollments the same hash
+    elsif data.has_key?(:statewide_testing)
+      statewide_testing_repository.load_data(data)
+      @districts = statewide_testing_repository.statewide_tests
     else
-      raise ArgumentError, 'data needs :enrollment key'
+      raise ArgumentError, 'data needs a valid key'
     end
-    # if data.has_key?(:statewide_testing)
-    #   @statewide_testing_repository = StatewideTestRepository.new
-    #   statewide_testing_repository.load_data(data)
-    # end
   end
 
   def find_by_name(name)
