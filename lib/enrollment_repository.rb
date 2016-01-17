@@ -6,7 +6,7 @@ class EnrollmentRepository
   attr_reader :enrollments
 
   def load_data(data)
-    @enrollments = DataLoader.new.load_csv(data)
+    @enrollments = DataLoader.new.load_enrollments_csv(data)
    end
 
   def find_by_name(name)
@@ -14,7 +14,7 @@ class EnrollmentRepository
     if enrollments.has_key?(name)
       Enrollment.new({
         :name => name,
-        :kindergarten_participation => enrollments.fetch(name).fetch(:kindergarten),
+        :kindergarten_participation => enrollments.fetch(name)[:kindergarten],
         :high_school_graduation => enrollments.fetch(name)[:high_school_graduation]
       })
     end
