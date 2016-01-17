@@ -55,7 +55,7 @@ class DataLoader
         if !row[:score].nil?
           subject_or_race = row[:score].downcase.to_sym
         elsif !row[:race_ethnicity].nil?
-          subject_or_race = row[:race_ethnicity].downcase
+          subject_or_race = row[:race_ethnicity].downcase.to_sym
         end
         create_test_hash(district, subject_or_race, year, percentage)
       end
