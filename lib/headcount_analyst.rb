@@ -47,38 +47,65 @@ class HeadcountAnalyst
   def kindergarten_participation_against_high_school_graduation(district_name)
     # note: "EAST YUMA COUNTY RJ-2" and "WEST YUMA COUNTY RJ-1" have no data for kindergarten participation"
     return 0 if district_repos.districts.fetch(district_name).fetch(:kindergarten).empty? || district_repos.districts.fetch(district_name).fetch(:high_school_graduation).empty?
+
     kindergarten_variation = kindergarten_participation_rate_variation(district_name, :against => "COLORADO")
     graduation_variation = graduation_rate_variation(district_name, :against => "COLORADO")
     kindergarten_variation / graduation_variation
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(district_correlation)
-    district_name = district_correlation.fetch(:for)
-    if district_name == 'STATEWIDE'
-      correlated = district_repos.districts.keys.select do |district|
-        kindergarten_participation_correlates_with_high_school_graduation(:for => district) unless district == 'COLORADO'
+    if district_correlation.key?(:for)
+      district_name = district_correlation.fetch(:for)
+      if district_name == 'STATEWIDE'
+        correlation_for_statewide
+      else
+        correlation_for_one_district(district_name)
       end
-      return true if correlated.count / (district_repos.districts.keys.count - 1) > 0.7
     else
-      return true if kindergarten_participation_against_high_school_graduation(district_name).between?(0.6, 1.5)
+      district_array = district_correlation.fetch(:across)
+      correlation_across_districts(district_array)
     end
   end
+
+  def correlation_for_one_district(district_name)
+    return true if kindergarten_participation_against_high_school_graduation(district_name).between?(0.6, 1.5)
+  end
+
+  def correlation_for_statewide
+    correlated = district_repos.districts.keys.select do |district|
+      kindergarten_participation_correlates_with_high_school_graduation(:for => district) unless district == 'COLORADO'
+    end
+    return true if correlated.count / (district_repos.districts.keys.count - 1) > 0.7
+  end
+
+  def correlation_across_districts(district_array)
+    correlations = district_array.select do |district|
+      kindergarten_participation_against_high_school_graduation(district).between?(0.6, 1.5)
+      #yields and array of correlations for all districts provided
+    end
+    return true if correlations.count/
+    (district_array.count) > 0.7
+  end
 end
-
-
 if __FILE__ == $0
   dr = DistrictRepository.new
   # file = "test/fixtures/kindergarten_edge_cases.csv"
-  file = "data/Kindergartners in full-day program.csv"
-  dr.load_data({
-    :enrollment => {
-      :kindergarten => file
-    }
-  })
+  # file = "data/Kindergartners in full-day program.csv"
   # dr.load_data({
   #   :enrollment => {
-  #     :kindergarten => "./test/fixtures/small_kg_fixture.csv",
-  #     :high_school_graduation => "./test/fixtures/small_hs_fixture.csv"}})
+  #     :kindergarten => file
+  #   }
+  # })
+  # # dr.load_data({
+  # #   :enrollment => {
+  # #     :kindergarten => "./test/fixtures/small_kg_fixture.csv",
+  # #     :high_school_graduation => "./test/fixtures/small_hs_fixture.csv"}})
+  # ha = HeadcountAnalyst.new(dr)
+  # ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
+  dr = DistrictRepository.new
+  dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv",
+                                :high_school_graduation => "./data/High school graduation rates.csv"}})
   ha = HeadcountAnalyst.new(dr)
-  ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
+  districts = ["ACADEMY 20", 'PARK (ESTES PARK) R-3', 'YUMA SCHOOL DISTRICT 1']
+   ha.kindergarten_participation_correlates_with_high_school_graduation(:across => districts)
 end

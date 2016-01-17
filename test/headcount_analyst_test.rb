@@ -83,4 +83,23 @@ class HeadcountAnalystTest < Minitest::Test
     ha = HeadcountAnalyst.new(dr)
     assert ha.kindergarten_participation_correlates_with_high_school_graduation(:for => 'STATEWIDE')
   end
+
+  def test_can_detect_wrong_correlation_across_a_subset_of_districts
+    dr = DistrictRepository.new
+    dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv",
+                                  :high_school_graduation => "./data/High school graduation rates.csv"}})
+    ha = HeadcountAnalyst.new(dr)
+    districts = ["ACADEMY 20", 'BENNETT 29J', 'YUMA SCHOOL DISTRICT 1']
+    refute ha.kindergarten_participation_correlates_with_high_school_graduation(:across => districts)
+  end
+
+  def test_can_find_correlation_across_a_subset_of_districts
+    dr = DistrictRepository.new
+    dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv",
+                                  :high_school_graduation => "./data/High school graduation rates.csv"}})
+    ha = HeadcountAnalyst.new(dr)
+    districts = ["ACADEMY 20", 'BAYFIELD 10 JT-R', 'YUMA SCHOOL DISTRICT 1']
+    assert ha.kindergarten_participation_correlates_with_high_school_graduation(:across => districts)
+  end
+
 end
