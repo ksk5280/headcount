@@ -21,6 +21,7 @@ class StatewideTest
   end
 
   RACES = [:all_students, :asian, :black, :hawaiian_pacific_islander, :hispanic, :native_american, :two_or_more, :white]
+  SUBJECTS = [:math, :reading, :writing]
 
   def proficient_by_grade(grade)
     if grade == 3
@@ -45,5 +46,9 @@ class StatewideTest
       end
     end
   race_hash
+  end
+
+  def proficient_for_subject_by_grade_in_year(subject, grade, year)
+    raise UnknownDataError unless SUBJECTS.include?(subject)
   end
 end
