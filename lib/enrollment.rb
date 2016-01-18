@@ -11,16 +11,12 @@ class Enrollment
     @name = data[:name].upcase
     @kindergarten_participation =
       data[:kindergarten_participation]
-      #maybe add instance_var of high_school_graduation?
     @high_school_graduation =
       data[:high_school_graduation]
   end
 
   def kindergarten_participation_by_year
     kindergarten_participation
-    # .each do |k, v|
-      # kindergarten_participation[k] = v.round(3)
-    # end
     # returns a hash with keys as years and values as truncated percentage
   end
 

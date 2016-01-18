@@ -14,8 +14,12 @@ class StatewideTestRepositoryTest < Minitest::Test
         :reading => 'test/fixtures/race_reading_fixture.csv',
         :writing => 'test/fixtures/race_writing_fixture.csv'
       }
-      })
+    })
     str
+  end
+
+  def test_can_load_a_file
+
   end
 
   def test_statewide_test_repo_class_exists
@@ -51,6 +55,12 @@ class StatewideTestRepositoryTest < Minitest::Test
     s = str.find_by_name("ACADEMY 20")
     assert_equal StatewideTest, s.class
     assert str.find_by_name("ACADEMY 20")
+  end
+
+  def test_find_by_name_is_case_insensitive
+    str = statewide_repo
+    s = str.find_by_name('Academy 20')
+    assert_equal StatewideTest, s.class
   end
 
   def test_find_by_name_method_returns_nil_if_district_doesnt_exist

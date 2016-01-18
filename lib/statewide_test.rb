@@ -19,12 +19,25 @@ class StatewideTest
     @math         = data[:math]
     @reading      = data[:reading]
     @writing      = data[:writing]
-    @subjects     = {:math => math, :reading => reading, :writing => writing}
+    @subjects     = { :math => math,
+                      :reading => reading,
+                      :writing => writing }
   end
 
-  RACES    = [:all_students, :asian, :black, :hawaiian_pacific_islander, :hispanic, :native_american, :two_or_more, :white]
-  SUBJECTS = [:math, :reading, :writing]
-  GRADE    = [3, 8]
+  RACES    = [ :all_students,
+               :asian,
+               :black,
+               :hawaiian_pacific_islander,
+               :hispanic,
+               :native_american,
+               :two_or_more,
+               :white ]
+
+  SUBJECTS = [ :math,
+               :reading,
+               :writing ]
+
+  GRADE    = [ 3 , 8 ]
 
   def proficient_by_grade(grade)
     if grade == 3

@@ -5,10 +5,11 @@ class DataLoader
   attr_reader :enrollments,
               :school_age,
               :statewide_tests,
-              :testing_type
+              :testing_type,
+              :economic_profiles,
+              :economic_type
 
   def load_enrollments_csv(data)
-    #create a block to load each key of enrollment
     @enrollments = {}
     data.fetch(:enrollment).each_key do |key|
       @school_age = key
@@ -28,17 +29,29 @@ class DataLoader
     statewide_tests
   end
 
+  def load_economic_csv(data)
+    @economic_profiles = {}
+    data.fetch(:economic_profile).each_key do |key|
+      @economic_type = key
+      file_name = data.fetch(:economic_profile).fetch(key)
+      load_csv(file_name, :economic_profile)
+    end
+    economic_profiles
+  end
+
   def load_csv(file_name, type)
     if File.exist?("#{file_name}") == false
-      raise ArgumentError,  "This is not a valid file. Please provide a valid CSV file."
+      raise InvalidFileError,  "This is not a valid file. Please provide a valid CSV file."
     else
       file = CSV.open "#{file_name}",
       headers: true,
       header_converters: :symbol
       if type == :enrollment
         enrollments = parse_data(file, type)
-      else
+      elsif type == :statewide_testing
         statewide_tests = parse_data(file, type)
+      elsif type == :economic_profile
+        economic_profiles = parse_data(file, type)
       end
     end
   end
@@ -46,8 +59,13 @@ class DataLoader
   def parse_data(data, type)
     data.each do |row|
       district = row[:location].upcase
-      year = row[:timeframe].to_i
-      percentage = clean_percentage(row[:data])
+      year = row[:timeframe]
+      if year.length < 5
+        year = year.to_i
+      else
+        year = year.split('-').map(&:to_i)
+      end
+      percentage = clean_percentage(row[:data], row[:dataformat], row[:poverty_level])
       if type == :enrollment
         create_enrollments_hash(district, year, percentage)
       elsif type == :statewide_testing
@@ -57,6 +75,8 @@ class DataLoader
           subject_or_race = row[:race_ethnicity].downcase.to_sym
         end
         create_test_hash(district, subject_or_race, year, percentage)
+      elsif type == :economic_profile
+        create_economic_hash(district, year, percentage)
       end
     end
   end
@@ -69,10 +89,8 @@ class DataLoader
       enrollments[district][school_age] = {}
     end
     # enrollments[district] = { school_age => {} }
-
     # {:kindergarten=>{}}
     enrollments[district][school_age][year] = percentage unless percentage == nil
-
   end
 
   def create_test_hash(district, subject_or_race, year, percentage)
@@ -85,9 +103,17 @@ class DataLoader
     if !statewide_tests[district][testing_type].has_key?(year)
       statewide_tests[district][testing_type][year] = {}
     end
-
     statewide_tests[district][testing_type][year][subject_or_race] = percentage unless percentage == nil
+  end
 
+  def create_economic_hash(district, year, percentage)
+    if !economic_profiles.has_key?(district)
+      economic_profiles[district] = {}
+    end
+    if !economic_profiles[district].has_key?(economic_type)
+      economic_profiles[district][economic_type] = {}
+    end
+    economic_profiles[district][economic_type][year] = percentage unless percentage == nil
   end
 
   # enrollments:
@@ -101,12 +127,18 @@ class DataLoader
   #   ...
   # }
 
-  def clean_percentage(percentage)
+  def clean_percentage(number, data_format, poverty_level)
     # regex => if it's not a number then nil
-    if percentage == 'N/A' || percentage == '#DIV/0!' || percentage == 'LNE'
+    if number == 'N/A' || number == '#DIV/0!' || number == 'LNE'
       nil
+    elsif data_format.downcase == 'currency'
+      number = number.to_i
+    elsif !poverty_level.nil? && data_format.downcase == 'percent'
+      return number.to_f.round(3) if poverty_level == 'Eligible for Free or Reduced Lunch'
+    elsif data_format.downcase == 'percent'
+      number.to_f.round(3)
     else
-      percentage.to_f.round(3)
+      nil
     end
   end
 
