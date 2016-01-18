@@ -41,3 +41,25 @@ ACADEMY 20,Reading,2013,Percent,0.85923
 ACADEMY 20,Reading,2014,Percent,0.83101
 ACADEMY 20,Writing,2014,Percent,0.63942
 ACADEMY 20,Writing,2013,Percent,0.6687
+PLATEAU VALLEY 50,Reading,2011,Percent,N/A
+AGATE 300,Math,2008,Percent,#VALUE!
+AGATE 300,Math,2009,Percent,#VALUE!
+AGATE 300,Math,2010,Percent,N/A
+AGATE 300,Reading,2008,Percent,N/A
+AGATE 300,Reading,2009,Percent,N/A
+AGATE 300,Reading,2010,Percent,N/A
+AGATE 300,Writing,2008,Percent,0.278
+AGATE 300,Writing,2009,Percent,0.29
+AGATE 300,Writing,2010,Percent,N/A
+AGATE 300,Math,2011,Percent,LNE
+AGATE 300,Reading,2011,Percent,LNE
+AGATE 300,Writing,2011,Percent,LNE
+AGATE 300,Reading,2012,Percent,LNE
+AGATE 300,Math,2012,Percent,LNE
+AGATE 300,Writing,2012,Percent,LNE
+AGATE 300,Math,2013,Percent,LNE
+AGATE 300,Math,2014,Percent,LNE
+AGATE 300,Reading,2013,Percent,LNE
+AGATE 300,Reading,2014,Percent,LNE
+AGATE 300,Writing,2014,Percent,LNE
+AGATE 300,Writing,2013,Percent,LNE

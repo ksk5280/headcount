@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'statewide_test'
+require_relative 'test_helper'
+require_relative '../lib/statewide_test'
 
 class StatewideTestTest < Minitest::Test
   def statewide_repo
@@ -98,7 +98,7 @@ class StatewideTestTest < Minitest::Test
     end
   end
 
-  def test_raises_unknown_data_error_for_unknown_grade
+  def test_raises_unknown_data_error_for_unknown_grade_in_prof_by_grade
     str = statewide_repo
     swt = str.find_by_name("ACADEMY 20")
 
@@ -138,7 +138,6 @@ class StatewideTestTest < Minitest::Test
   def test_raises_unknown_race_error
     str = statewide_repo
     swt = str.find_by_name("ACADEMY 20")
-
     assert_raises(UnknownRaceError) do
       swt.proficient_by_race_or_ethnicity(:purple)
     end
@@ -147,9 +146,87 @@ class StatewideTestTest < Minitest::Test
   def test_raises_unknown_data_error_if_subject_is_unknown
     str = statewide_repo
     swt = str.find_by_name("ACADEMY 20")
-
     assert_raises(UnknownDataError) do
-      swt.proficient_for_subject_by_grade_in_year(:history, 8, 2010)
+      swt.proficient_for_subject_by_grade_in_year(:history, 8, 2011)
+    end
+  end
+
+  def test_raises_unknown_data_error_if_grade_is_unknown_in_prof_for_subject_by_grade
+    str = statewide_repo
+    swt = str.find_by_name("ACADEMY 20")
+    assert_raises(UnknownDataError) do
+      swt.proficient_for_subject_by_grade_in_year(:math, 0, 2011)
+    end
+  end
+
+  def test_raises_unknown_data_error_if_year_is_unknown_in_prof_for_subject_by_grade
+    str = statewide_repo
+    swt = str.find_by_name("ACADEMY 20")
+    assert_raises(UnknownDataError) do
+      swt.proficient_for_subject_by_grade_in_year(:math, 3, 1900)
+    end
+  end
+
+  def test_proficiency_for_subject_by_grade_in_year
+    str = statewide_repo
+    swt = str.find_by_name("ACADEMY 20")
+    assert_in_delta 0.653, swt.proficient_for_subject_by_grade_in_year(:math, 8, 2011), 0.005
+    assert_in_delta 0.831, swt.proficient_for_subject_by_grade_in_year(:reading, 3, 2014), 0.005
+    assert_in_delta 0.738, swt.proficient_for_subject_by_grade_in_year(:writing, 8, 2012), 0.005
+  end
+
+  def test_returns_NA_if_no_data_for_given_year_and_subject
+    str = statewide_repo
+    swt = str.find_by_name("PLATEAU VALLEY 50")
+    assert_equal "N/A", swt.proficient_for_subject_by_grade_in_year(:reading, 8, 2011)
+  end
+
+  def test_raises_unknown_data_error_if_subject_is_unknown_in_subject_by_race_in_year
+    str = statewide_repo
+    swt = str.find_by_name("ACADEMY 20")
+    assert_raises(UnknownDataError) do
+      swt.proficient_for_subject_by_race_in_year(:history, :asian, 2011)
+    end
+  end
+
+  def test_raises_unknown_data_error_if_race_is_unknown_in_prof_for_subject_by_race_in_year
+    str = statewide_repo
+    swt = str.find_by_name("ACADEMY 20")
+    assert_raises(UnknownDataError) do
+      swt.proficient_for_subject_by_race_in_year(:math, :canadian, 2011)
+    end
+  end
+
+  def test_raises_unknown_data_error_if_year_is_unknown_in_prof_for_subject_by_race_in_year
+    str = statewide_repo
+    swt = str.find_by_name("ACADEMY 20")
+    assert_raises(UnknownDataError) do
+      swt.proficient_for_subject_by_grade_in_year(:math, :black, 1900)
+    end
+  end
+
+  def test_proficiency_by_subject_race_and_year
+    str = statewide_repo
+
+    testing = str.find_by_name("ACADEMY 20")
+    assert_in_delta 0.714, testing.proficient_for_subject_by_race_in_year(:math, :white, 2012), 0.005
+    assert_in_delta 0.605, testing.proficient_for_subject_by_race_in_year(:math, :hispanic, 2014), 0.005
+    assert_in_delta 0.861, testing.proficient_for_subject_by_race_in_year(:reading, :white, 2013), 0.005
+    assert_in_delta 0.624, testing.proficient_for_subject_by_race_in_year(:writing, :hispanic, 2014), 0.005
+
+    testing = str.find_by_name("COLORADO")
+    assert_in_delta 0.662, testing.proficient_for_subject_by_race_in_year(:math, :white, 2012), 0.005
+    assert_in_delta 0.396, testing.proficient_for_subject_by_race_in_year(:math, :hispanic, 2014), 0.005
+    assert_in_delta 0.8, testing.proficient_for_subject_by_race_in_year(:reading, :white, 2013), 0.005
+    assert_in_delta 0.375, testing.proficient_for_subject_by_race_in_year(:writing, :hispanic, 2014), 0.005
+  end
+
+  def test_proficiency_by_subject_race_and_year_returns_NA_if_no_data_for_year
+    str = statewide_repo
+
+    swt = str.find_by_name("AGATE 300")
+    assert_raises(UnknownDataError) do
+      swt.proficient_for_subject_by_race_in_year(:reading, :white, 2011)
     end
   end
 end
