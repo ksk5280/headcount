@@ -59,4 +59,17 @@ class EconomicProfileTest < Minitest::Test
     })
     assert_in_delta 0.184, ep.children_in_poverty_in_year(2012), 0.005
   end
+  # 
+  # def test_if_year_is_not_found_raise_unknown_data_error_for_free_or_reduced_lunch
+  #   ep = EconomicProfile.new({
+  #     :name => "ACADEMY 20",
+  #     :free_or_reduced_price_lunch =>
+  #       { 2014 =>
+  #         { :percentage => 0.023,
+  #           :total      => 100 }
+  #       })
+  #   assert_raises(UnknownDataError) do
+  #     ep.free_or_reduced_price_lunch_percentage_in_year(1804)
+  #   end
+  # end
 end

@@ -44,4 +44,10 @@ class EconomicProfile
     raise UnknownDataError unless children_in_poverty.keys.include?(year)
     children_in_poverty.fetch(year)
   end
+
+  def free_or_reduced_price_lunch_percentage_in_year(year)
+    raise UnknownDataError unless free_or_reduced_price_lunch.keys.include?(year)
+    free_or_reduced_price_lunch.fetch(year)
+
+  end
 end
