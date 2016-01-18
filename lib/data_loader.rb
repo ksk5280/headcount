@@ -65,7 +65,9 @@ class DataLoader
       else
         year = year.split('-').map(&:to_i)
       end
-      percentage = clean_percentage(row[:data], row[:dataformat], row[:poverty_level])
+      # data_format = row[:dataformat].downcase
+      data_format = clean_data_format(row[:dataformat])
+      percentage = clean_percentage(row[:data], data_format, row[:poverty_level])
       if type == :enrollment
         create_enrollments_hash(district, year, percentage)
       elsif type == :statewide_testing
@@ -76,9 +78,19 @@ class DataLoader
         end
         create_test_hash(district, subject_or_race, year, percentage)
       elsif type == :economic_profile
-        create_economic_hash(district, year, percentage)
+        create_economic_hash(district, year, percentage, data_format)
       end
     end
+  end
+
+  def clean_data_format(data_format)
+    data_format = data_format.downcase
+    if data_format == 'percent'
+      data_format = :percentage
+    elsif data_format == 'number'
+      data_format = :total
+    end
+    data_format
   end
 
   def create_enrollments_hash(district, year, percentage)
@@ -106,14 +118,24 @@ class DataLoader
     statewide_tests[district][testing_type][year][subject_or_race] = percentage unless percentage == nil
   end
 
-  def create_economic_hash(district, year, percentage)
+  def create_economic_hash(district, year, number, data_format)
     if !economic_profiles.has_key?(district)
       economic_profiles[district] = {}
     end
     if !economic_profiles[district].has_key?(economic_type)
       economic_profiles[district][economic_type] = {}
     end
-    economic_profiles[district][economic_type][year] = percentage unless percentage == nil
+    if !economic_profiles[district][economic_type].has_key?(year)
+      economic_profiles[district][economic_type][year] = {}
+    end
+    # if economic_type == :free_or_reduced_price_lunch && !economic_profiles[district][economic_type].has_key?(data_format)
+    #   economic_profiles[district][economic_type][year][data_format] = {}
+    # end
+    if economic_type == :free_or_reduced_price_lunch
+      economic_profiles[district][economic_type][year][data_format] = number unless number == nil
+    else
+      economic_profiles[district][economic_type][year] = number unless number == nil
+    end
   end
 
   # enrollments:
@@ -133,9 +155,11 @@ class DataLoader
       nil
     elsif data_format.downcase == 'currency'
       number = number.to_i
-    elsif !poverty_level.nil? && data_format.downcase == 'percent'
+    elsif !poverty_level.nil? && data_format == :percentage
       return number.to_f.round(3) if poverty_level == 'Eligible for Free or Reduced Lunch'
-    elsif data_format.downcase == 'percent'
+    elsif !poverty_level.nil? && data_format == :total
+      return number.to_i if poverty_level == 'Eligible for Free or Reduced Lunch'
+    elsif data_format.downcase == :percentage
       number.to_f.round(3)
     else
       nil
