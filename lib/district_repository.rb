@@ -8,11 +8,13 @@ class DistrictRepository
   attr_reader :districts,
               :enrollment_repository,
               :statewide_testing_repository,
+              :economic_profile_repository,
               :data
 
   def initialize
     @enrollment_repository = EnrollmentRepository.new
     @statewide_testing_repository = StatewideTestRepository.new
+    @economic_profile_repository = EconomicProfileRepository.new
   end
 
   def load_data(data)
@@ -20,14 +22,15 @@ class DistrictRepository
     if data.has_key?(:enrollment)
       enrollment_repository.load_data(data)
       @districts = enrollment_repository.enrollments
-      #this makes districts and enrollments the same hash
     end
     if data.has_key?(:statewide_testing)
       statewide_testing_repository.load_data(data)
       @districts = statewide_testing_repository.statewide_tests
     end
-      # raise ArgumentError, 'data needs a valid key'
-    # end
+    if data.has_key?(:economic_profile)
+      economic_profile_repository.load_data(data)
+      @districts = economic_profile_repository.economic_profiles
+    end
   end
 
   def find_by_name(name)
@@ -43,6 +46,12 @@ class DistrictRepository
         district = District.new({
           :name => name,
           :statewide_testing => statewide_testing_repository.find_by_name(name)
+        })
+      end
+      if data.has_key?(:economic_profile)
+        district = District.new({
+          :name => name,
+          :economic_profile => economic_profile_repository.find_by_name(name)
         })
       end
     end
