@@ -146,4 +146,33 @@ class DistrictRepositoryTest < Minitest::Test
     })
     assert_equal EnrollmentRepository, dr.enrollment_repository.class
   end
+
+meta tag: true
+  def test_creates_districts_with_economic_profile_data
+    dr = DistrictRepository.new
+    dr.load_data({
+      :economic_profile => {
+        :median_household_income => "test/fixtures/median_income_fixture.csv",
+        :children_in_poverty => "test/fixtures/poverty_fixture.csv",
+        :free_or_reduced_price_lunch => "test/fixtures/free_lunch_fixture.csv",
+        :title_i => "test/fixtures/title_i_fixture.csv"
+      }
+    })
+    d = dr.find_by_name('ACADEMY 20')
+    assert_equal District, d.class
+  end
+
+  # def test_creates_districts_with_economic_profile_data
+  #   dr = DistrictRepository.new
+  #   dr.load_data({
+  #     :economic_profile => {
+  #       :median_household_income => "test/fixtures/median_income_fixture.csv",
+  #       :children_in_poverty => "test/fixtures/poverty_fixture.csv",
+  #       :free_or_reduced_price_lunch => "test/fixtures/free_lunch_fixture.csv",
+  #       :title_i => "test/fixtures/title_i_fixture.csv"
+  #     }
+  #   })
+  #   d = dr.find_by_name('calzone')
+  #   assert_nil d
+  # end
 end

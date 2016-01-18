@@ -34,7 +34,7 @@ class EconomicProfileRepositoryTest < Minitest::Test
 
   def test_can_load_a_file
     epr = economic_profile_repository
-    assert_equal 5, epr.economic_profile.count
+    assert_equal 5, epr.economic_profiles.count
   end
 
   def test_can_find_by_name
