@@ -33,8 +33,6 @@ class DistrictRepository
 
   def find_by_name(name)
     name = name.upcase
-    # require "pry"
-    # binding.pry
     if districts.has_key?(name)
       if data.has_key?(:enrollment)
         district = District.new({

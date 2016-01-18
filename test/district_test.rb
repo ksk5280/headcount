@@ -3,9 +3,18 @@ require 'test_helper'
 
 
 class DistrictTest < Minitest::Test
+  def test_class_exists
+    assert District
+  end
+
   def test_it_has_a_name
     district = District.new({:name => "ACADEMY 20"})
     assert_equal "ACADEMY 20", district.name
+  end
+
+  def test_name_can_change
+    district = District.new({:name => "PIZZA"})
+    assert_equal "PIZZA", district.name
   end
 
   def test_it_has_enrollments
