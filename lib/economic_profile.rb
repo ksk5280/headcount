@@ -18,6 +18,30 @@ class EconomicProfile
   end
 
   def median_household_income_in_year(year)
+    check_for_known_year(year)
+    year_included = median_household_income.select do |year_range, currency|
+      year.between?(year_range.first, year_range.last)
+    end
+    sum = year_included.values.reduce(:+)
+    average = sum/year_included.count
+  end
 
+  def check_for_known_year(year)
+    raise UnknownDataError, "Year is not included" unless year_in_range?(year)
+  end
+
+  def year_in_range?(year)
+    median_household_income.keys.any? { |year_range| year.between?(year_range[0], year_range[1]) }
+  end
+
+  def median_household_income_average
+    sum = median_household_income.values.reduce(:+)
+    count = median_household_income.keys.count
+    average = sum / count
+  end
+
+  def children_in_poverty_in_year(year)
+    raise UnknownDataError unless children_in_poverty.keys.include?(year)
+    children_in_poverty.fetch(year)
   end
 end
