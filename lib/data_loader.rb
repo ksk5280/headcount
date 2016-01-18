@@ -104,7 +104,7 @@ class DataLoader
 
   def clean_percentage(percentage)
     # regex => if it's not a number then nil
-    if percentage == 'N/A' || percentage == '#DIV/0!'
+    if percentage == 'N/A' || percentage == '#DIV/0!' || percentage == 'LNE'
       nil
     else
       percentage.to_f.round(3)

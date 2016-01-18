@@ -8,7 +8,8 @@ class StatewideTest
               :eighth_grade,
               :math,
               :reading,
-              :writing
+              :writing,
+              :subjects
 
   def initialize(data)
     @data         = data
@@ -18,10 +19,12 @@ class StatewideTest
     @math         = data[:math]
     @reading      = data[:reading]
     @writing      = data[:writing]
+    @subjects     = {:math => math, :reading => reading, :writing => writing}
   end
 
-  RACES = [:all_students, :asian, :black, :hawaiian_pacific_islander, :hispanic, :native_american, :two_or_more, :white]
+  RACES    = [:all_students, :asian, :black, :hawaiian_pacific_islander, :hispanic, :native_american, :two_or_more, :white]
   SUBJECTS = [:math, :reading, :writing]
+  GRADE    = [3, 8]
 
   def proficient_by_grade(grade)
     if grade == 3
@@ -35,20 +38,42 @@ class StatewideTest
 
   def proficient_by_race_or_ethnicity(race)
     raise UnknownRaceError unless RACES.include?(race)
-    subjects = {:math => math, :reading => reading, :writing => writing}
     race_hash = {}
     subjects.each do |k, v|
       v.keys.each do |year|
         if !race_hash.has_key?(year)
           race_hash[year] = {}
         end
+        raise UnknownDataError if v.fetch(year).empty?
         race_hash.fetch(year)[k] = v.fetch(year).fetch(race)
       end
     end
-  race_hash
+    race_hash
   end
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
-    raise UnknownDataError unless SUBJECTS.include?(subject)
+    raise UnknownDataError unless SUBJECTS.include?(subject) && GRADE.include?(grade) && years(subject).include?(year)
+
+    grades = proficient_by_grade(grade)
+    if grades.fetch(year).empty?
+      'N/A'
+    else
+      grades.fetch(year).fetch(subject)
+    end
+  end
+
+  def proficient_for_subject_by_race_in_year(subject, race, year)
+    raise UnknownDataError unless SUBJECTS.include?(subject) && RACES.include?(race) && years(subject).include?(year)
+
+    races = proficient_by_race_or_ethnicity(race)
+    if races.fetch(year).empty?
+      'N/A'
+    else
+      races.fetch(year).fetch(subject)
+    end
+  end
+
+  def years(subject)
+    subjects.fetch(subject).keys
   end
 end
