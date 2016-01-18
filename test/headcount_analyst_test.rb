@@ -2,6 +2,10 @@ require 'headcount_analyst'
 require 'test_helper'
 
 class HeadcountAnalystTest < Minitest::Test
+  def test_class_exists
+    assert HeadcountAnalyst
+  end
+
   def test_calculates_ratio_of_average_kg_participation_between_districts
     dr = DistrictRepository.new
     dr.load_data({

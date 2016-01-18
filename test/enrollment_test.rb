@@ -3,6 +3,10 @@ require 'enrollment_repository'
 require 'test_helper'
 
 class EnrollmentTest < Minitest::Test
+  def test_class_exists
+    assert Enrollment
+  end
+
   def test_it_has_a_name
     e = Enrollment.new({
       :name => "ACADEMY 20",
@@ -36,7 +40,31 @@ class EnrollmentTest < Minitest::Test
       }
     })
     district = er.find_by_name("ACADEMY 20")
-    expected = {2007=>0.392}
+    expected = {2007 => 0.392}
+    assert_equal expected, district.kindergarten_participation_by_year
+  end
+
+  def test_kindergarten_returns_empty_hash_when_value_is_NA
+    er = EnrollmentRepository.new
+    er.load_data({
+      :enrollment => {
+        :kindergarten => "test/fixtures/kindergarten_edge_cases.csv"
+      }
+    })
+    district = er.find_by_name("EAST YUMA COUNTY RJ-2")
+    expected = {}
+    assert_equal expected, district.kindergarten_participation_by_year
+  end
+
+  def test_kindergarten_exludes_DIVO
+    er = EnrollmentRepository.new
+    er.load_data({
+      :enrollment => {
+        :kindergarten => "test/fixtures/kindergarten_edge_cases.csv"
+      }
+    })
+    district = er.find_by_name("AGATE 300")
+    expected = {2007 => 1}
     assert_equal expected, district.kindergarten_participation_by_year
   end
 
