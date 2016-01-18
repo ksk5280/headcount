@@ -125,11 +125,14 @@ class DataLoader
     if !economic_profiles[district].has_key?(economic_type)
       economic_profiles[district][economic_type] = {}
     end
-    if economic_type == :free_or_reduced_price_lunch && !economic_profiles[district][economic_type].has_key?(data_format)
-      economic_profiles[district][economic_type][data_format] = {}
+    if !economic_profiles[district][economic_type].has_key?(year)
+      economic_profiles[district][economic_type][year] = {}
     end
+    # if economic_type == :free_or_reduced_price_lunch && !economic_profiles[district][economic_type].has_key?(data_format)
+    #   economic_profiles[district][economic_type][year][data_format] = {}
+    # end
     if economic_type == :free_or_reduced_price_lunch
-      economic_profiles[district][economic_type][data_format][year] = number unless number == nil
+      economic_profiles[district][economic_type][year][data_format] = number unless number == nil
     else
       economic_profiles[district][economic_type][year] = number unless number == nil
     end
