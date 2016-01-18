@@ -2,6 +2,10 @@ require 'district_repository'
 require 'test_helper'
 
 class DistrictRepositoryTest < Minitest::Test
+  def test_class_exists
+    assert DistrictRepository
+  end
+
   def test_it_can_take_in_a_file
     dr = DistrictRepository.new
     dr.load_data({
@@ -12,8 +16,17 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal 2, dr.districts.count
   end
 
-meta t: true
-  def test_it_can_find_by_name
+  def test_load_data_creates_district_objects
+    dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "test/fixtures/kindergarten_fixture.csv"
+      }
+    })
+    assert_equal ['COLORADO', 'ACADEMY 20'], dr.districts.keys
+  end
+
+  def test_dr_can_find_district_name
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
@@ -22,6 +35,17 @@ meta t: true
     })
     district = dr.find_by_name("ACADEMY 20")
     assert_equal "ACADEMY 20", district.name
+  end
+
+  def test_dr_can_find_another_name
+    dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "test/fixtures/kindergarten_fixture.csv"
+      }
+    })
+    district = dr.find_by_name("COLORADO")
+    assert_equal "COLORADO", district.name
   end
 
   def test_it_can_find_by_name_lower_case_names
@@ -56,6 +80,17 @@ meta t: true
     district = dr.find_by_name("ACADEMY 20")
     msg = "Expected district to be a class of District"
     assert district.instance_of?(District), msg
+  end
+
+  def test_returns_empty_array_if_no_districts_include_fragment
+    dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "test/fixtures/kindergarten_fixture.csv"
+      }
+    })
+    district_array = dr.find_all_matching("PIZZA")
+    assert_equal [], district_array
   end
 
   def test_finds_all_matching_districts_using_name_fragment
