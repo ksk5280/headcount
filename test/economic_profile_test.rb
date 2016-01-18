@@ -4,6 +4,7 @@ require 'test_helper'
 
 class EconomicProfileTest < Minitest::Test
   def test_it_has_a_name
+    skip
     ep = EconomicProfile.new({
       :name => "ACADEMY 20",
     })

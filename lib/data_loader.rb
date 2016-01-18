@@ -40,15 +40,17 @@ class DataLoader
 
   def load_csv(file_name, type)
     if File.exist?("#{file_name}") == false
-      raise ArgumentError,  "This is not a valid file. Please provide a valid CSV file."
+      raise InvalidFileError,  "This is not a valid file. Please provide a valid CSV file."
     else
       file = CSV.open "#{file_name}",
       headers: true,
       header_converters: :symbol
       if type == :enrollment
         enrollments = parse_data(file, type)
-      else
+      elsif type == :statewide_testing
         statewide_tests = parse_data(file, type)
+      elsif type == :economic_profile
+        economic_profiles = parse_data(file, type)
       end
     end
   end
@@ -56,7 +58,12 @@ class DataLoader
   def parse_data(data, type)
     data.each do |row|
       district = row[:location].upcase
-      year = row[:timeframe].to_i
+      year = row[:timeframe]
+      if year.length < 5
+        year = year.to_i
+      else
+        year
+      end
       percentage = clean_percentage(row[:data])
       if type == :enrollment
         create_enrollments_hash(district, year, percentage)
@@ -67,6 +74,9 @@ class DataLoader
           subject_or_race = row[:race_ethnicity].downcase.to_sym
         end
         create_test_hash(district, subject_or_race, year, percentage)
+      elsif type == :economic_profile
+        currency = row[:data]
+        create_economic_hash(district, currency, year, percentage)
       end
     end
   end
@@ -79,7 +89,6 @@ class DataLoader
       enrollments[district][school_age] = {}
     end
     # enrollments[district] = { school_age => {} }
-
     # {:kindergarten=>{}}
     enrollments[district][school_age][year] = percentage unless percentage == nil
 
@@ -97,6 +106,9 @@ class DataLoader
     end
 
     statewide_tests[district][testing_type][year][subject_or_race] = percentage unless percentage == nil
+  end
+
+  def create_economic_hash(district, currency, year, percentage)
 
   end
 

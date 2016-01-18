@@ -3,3 +3,6 @@ end
 
 class UnknownRaceError < StandardError
 end
+
+class InvalidFileError < StandardError
+end
