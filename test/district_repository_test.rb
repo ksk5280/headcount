@@ -12,7 +12,6 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal 2, dr.districts.count
   end
 
-meta t: true
   def test_it_can_find_by_name
     dr = DistrictRepository.new
     dr.load_data({
