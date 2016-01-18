@@ -5,10 +5,10 @@ class DataLoader
   attr_reader :enrollments,
               :school_age,
               :statewide_tests,
-              :testing_type
+              :testing_type,
+              :economic_profiles
 
   def load_enrollments_csv(data)
-    #create a block to load each key of enrollment
     @enrollments = {}
     data.fetch(:enrollment).each_key do |key|
       @school_age = key
@@ -26,6 +26,16 @@ class DataLoader
       load_csv(file_name, :statewide_testing)
     end
     statewide_tests
+  end
+
+  def load_economic_csv(data)
+    @economic_profiles = {}
+    data.fetch(:economic_profile).each_key do |key|
+      @economic_type = key
+      file_name = data.fetch(:economic_profile).fetch(key)
+      load_csv(file_name, :economic_profile)
+    end
+    economic_profiles
   end
 
   def load_csv(file_name, type)
