@@ -6,7 +6,8 @@ class DataLoader
               :school_age,
               :statewide_tests,
               :testing_type,
-              :economic_profiles
+              :economic_profiles,
+              :economic_type
 
   def load_enrollments_csv(data)
     @enrollments = {}
@@ -62,9 +63,9 @@ class DataLoader
       if year.length < 5
         year = year.to_i
       else
-        year
+        year = year.split('-').map(&:to_i)
       end
-      percentage = clean_percentage(row[:data])
+      percentage = clean_percentage(row[:data], row[:dataformat], row[:poverty_level])
       if type == :enrollment
         create_enrollments_hash(district, year, percentage)
       elsif type == :statewide_testing
@@ -75,8 +76,7 @@ class DataLoader
         end
         create_test_hash(district, subject_or_race, year, percentage)
       elsif type == :economic_profile
-        currency = row[:data]
-        create_economic_hash(district, currency, year, percentage)
+        create_economic_hash(district, year, percentage)
       end
     end
   end
@@ -91,7 +91,6 @@ class DataLoader
     # enrollments[district] = { school_age => {} }
     # {:kindergarten=>{}}
     enrollments[district][school_age][year] = percentage unless percentage == nil
-
   end
 
   def create_test_hash(district, subject_or_race, year, percentage)
@@ -104,12 +103,17 @@ class DataLoader
     if !statewide_tests[district][testing_type].has_key?(year)
       statewide_tests[district][testing_type][year] = {}
     end
-
     statewide_tests[district][testing_type][year][subject_or_race] = percentage unless percentage == nil
   end
 
-  def create_economic_hash(district, currency, year, percentage)
-
+  def create_economic_hash(district, year, percentage)
+    if !economic_profiles.has_key?(district)
+      economic_profiles[district] = {}
+    end
+    if !economic_profiles[district].has_key?(economic_type)
+      economic_profiles[district][economic_type] = {}
+    end
+    economic_profiles[district][economic_type][year] = percentage unless percentage == nil
   end
 
   # enrollments:
@@ -123,12 +127,18 @@ class DataLoader
   #   ...
   # }
 
-  def clean_percentage(percentage)
+  def clean_percentage(number, data_format, poverty_level)
     # regex => if it's not a number then nil
-    if percentage == 'N/A' || percentage == '#DIV/0!' || percentage == 'LNE'
+    if number == 'N/A' || number == '#DIV/0!' || number == 'LNE'
       nil
+    elsif data_format.downcase == 'currency'
+      number = number.to_i
+    elsif !poverty_level.nil? && data_format.downcase == 'percent'
+      return number.to_f.round(3) if poverty_level == 'Eligible for Free or Reduced Lunch'
+    elsif data_format.downcase == 'percent'
+      number.to_f.round(3)
     else
-      percentage.to_f.round(3)
+      nil
     end
   end
 

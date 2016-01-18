@@ -32,29 +32,25 @@ class EconomicProfileRepositoryTest < Minitest::Test
     end
   end
 
-  meta t: true
+meta t: true
   def test_can_load_a_file
-    skip
     epr = economic_profile_repository
-    assert_equal 2, epr.economic_profile.count
+    assert_equal 5, epr.economic_profile.count
   end
 
   def test_can_find_by_name
-    skip
     epr = economic_profile_repository
     ep = epr.find_by_name('ACADEMY 20')
-    assert_equal 'ACADEMY 20', economic_profile.name
+    assert_equal 'ACADEMY 20', ep.name
   end
 
   def test_find_by_name_is_case_insensitive
-    skip
     epr = economic_profile_repository
     ep = epr.find_by_name('Academy 20')
     assert_equal EconomicProfile, ep.class
   end
 
   def test_find_by_name_creates_economic_profile_instance
-    skip
     epr = economic_profile_repository
     ep = epr.find_by_name('ACADEMY 20')
     assert_equal EconomicProfile, ep.class
