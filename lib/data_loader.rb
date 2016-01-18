@@ -18,7 +18,6 @@ class DataLoader
     enrollments
   end
 
-
   def load_statewide_tests_csv(data)
     @statewide_tests = {}
     data.fetch(:statewide_testing).each_key do |key|

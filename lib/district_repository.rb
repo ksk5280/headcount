@@ -6,7 +6,10 @@ require_relative 'enrollment'
 require_relative 'statewide_test_repository'
 
 class DistrictRepository
-  attr_reader :districts, :enrollment_repository
+  attr_reader :districts,
+              :enrollment_repository,
+              :statewide_testing_repository,
+              :data
 
   def initialize
     @enrollment_repository = EnrollmentRepository.new
@@ -14,26 +17,39 @@ class DistrictRepository
   end
 
   def load_data(data)
+    @data = data
     if data.has_key?(:enrollment)
       enrollment_repository.load_data(data)
       @districts = enrollment_repository.enrollments
       #this makes districts and enrollments the same hash
-    elsif data.has_key?(:statewide_testing)
+    end
+    if data.has_key?(:statewide_testing)
       statewide_testing_repository.load_data(data)
       @districts = statewide_testing_repository.statewide_tests
-    else
-      raise ArgumentError, 'data needs a valid key'
     end
+      # raise ArgumentError, 'data needs a valid key'
+    # end
   end
 
   def find_by_name(name)
     name = name.upcase
+    # require "pry"
+    # binding.pry
     if districts.has_key?(name)
-      District.new({
-        :name => name,
-        :enrollment => enrollment_repository.find_by_name(name)
-      })
+      if data.has_key?(:enrollment)
+        district = District.new({
+          :name => name,
+          :enrollment => enrollment_repository.find_by_name(name)
+        })
+      end
+      if data.has_key?(:statewide_testing)
+        district = District.new({
+          :name => name,
+          :statewide_testing => statewide_testing_repository.find_by_name(name)
+        })
+      end
     end
+    district
   end
 
   def find_all_matching(name_fragment)
