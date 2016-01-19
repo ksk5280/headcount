@@ -93,15 +93,15 @@ class HeadcountAnalyst
     # raise UnknownDataError, "#{grade} is not a known grade" unless GRADES.include?(grade)
     # raise InsufficientInformationError, "A grade must be provided to answer this question" if grade.nil?
     #for each district:
+    require "pry"
+    binding.pry
     array = district_hash.each_key do |district|
+      # highest year and lowest year for which there is subject and grade data
       years = district_hash.fetch(district).fetch(:third_grade).keys.sort
-      return nil if district_hash.fetch(district).fetch(:third_grade).fetch(years.last).fetch(:math).nil?
-      return nil if district_hash.fetch(district).fetch(:third_grade).fetch(years.first).fetch(:math).nil?
+      # if there is no data return nil
       (district_hash.fetch(district).fetch(:third_grade).fetch(years.last).fetch(:math) - district_hash.fetch(district).fetch(:third_grade).fetch(years.first).fetch(:math)) / (years.last - years.first)
     end
     array
-    require "pry"
-    binding.pry
   end
 
 
