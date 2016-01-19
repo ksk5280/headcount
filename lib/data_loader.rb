@@ -46,13 +46,7 @@ class DataLoader
       file = CSV.open "#{file_name}",
       headers: true,
       header_converters: :symbol
-      if type == :enrollment
-        enrollments = parse_data(file, type)
-      elsif type == :statewide_testing
-        statewide_tests = parse_data(file, type)
-      elsif type == :economic_profile
-        economic_profiles = parse_data(file, type)
-      end
+      parse_data(file, type)
     end
   end
 
