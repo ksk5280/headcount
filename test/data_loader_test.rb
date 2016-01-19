@@ -93,7 +93,7 @@ class DataLoaderTest < Minitest::Test
     assert_equal 56789, percent
   end
 
-  def test_clean_percentage_returns_nil_for_hashtagVALUE!
+  def test_clean_percentage_returns_nil_for_hashtagVALUE
     ep = DataLoader.new
     percent = ep.clean_percentage('#VALUE!', :percent, nil)
     assert_nil percent

@@ -7,5 +7,5 @@ end
 class InvalidFileError < StandardError
 end
 
-class InsufficientInformationError < ArgumentError::StandardError
+class InsufficientInformationError < ArgumentError
 end

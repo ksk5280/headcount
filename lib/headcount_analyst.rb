@@ -89,12 +89,10 @@ class HeadcountAnalyst
     (district_array.count) > 0.7
   end
 
-  def top_statewide_test_year_over_year_growth(grade_and_subject)
+  def top_statewide_test_year_over_year_growth(data)
     # raise UnknownDataError, "#{grade} is not a known grade" unless GRADES.include?(grade)
     # raise InsufficientInformationError, "A grade must be provided to answer this question" if grade.nil?
-    #for each district:
-    require "pry"
-    binding.pry
+    # for each district:
     array = district_hash.each_key do |district|
       # highest year and lowest year for which there is subject and grade data
       years = district_hash.fetch(district).fetch(:third_grade).keys.sort
