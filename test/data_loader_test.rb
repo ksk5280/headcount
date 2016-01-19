@@ -86,4 +86,10 @@ class DataLoaderTest < Minitest::Test
     percent = ep.clean_percentage(nil, :percentage, 'Eligible for Free or Reduced Lunch')
     assert_nil percent
   end
+
+  def test_clean_percentage_currency_returns_integer
+    ep = DataLoader.new
+    percent = ep.clean_percentage('56789', :currency, nil)
+    assert_equal 56789, percent
+  end
 end
