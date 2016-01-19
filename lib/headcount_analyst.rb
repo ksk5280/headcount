@@ -89,15 +89,22 @@ class HeadcountAnalyst
     (district_array.count) > 0.7
   end
 
-  def top_statewide_test_year_over_year_growth(grade, subject)
-    raise UnknownDataError, "#{grade} is not a known grade" unless GRADES.include?(grade)
-    raise InsufficientInformationError, "A grade must be provided to answer this question" if grade.nil?
-    #for each district do
-    #years = district_hash.fetch(district_name).fetch(grade).keys. sort
-    #district_hash.fetch(district_name).fetch(grade).fetch(years.last).fetch(subject) - district_hash.fetch(district_name).fetch(grade).fetch(years.first).fetch(subject)
-    #divided by
-    #(years.last - years.first)
+  def top_statewide_test_year_over_year_growth(grade_and_subject)
+    # raise UnknownDataError, "#{grade} is not a known grade" unless GRADES.include?(grade)
+    # raise InsufficientInformationError, "A grade must be provided to answer this question" if grade.nil?
+    #for each district:
+    array = district_hash.each_key do |district|
+      years = district_hash.fetch(district).fetch(:third_grade).keys.sort
+      return nil if district_hash.fetch(district).fetch(:third_grade).fetch(years.last).fetch(:math).nil?
+      return nil if district_hash.fetch(district).fetch(:third_grade).fetch(years.first).fetch(:math).nil?
+      (district_hash.fetch(district).fetch(:third_grade).fetch(years.last).fetch(:math) - district_hash.fetch(district).fetch(:third_grade).fetch(years.first).fetch(:math)) / (years.last - years.first)
+    end
+    array
+    require "pry"
+    binding.pry
   end
+
+
 
 end
 if __FILE__ == $0
