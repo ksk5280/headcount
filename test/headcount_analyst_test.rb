@@ -6,6 +6,20 @@ class HeadcountAnalystTest < Minitest::Test
     assert HeadcountAnalyst
   end
 
+  def test_headcount_analyst_is_initialized_with_a_district_repository
+    dr = DistrictRepository.new
+    dr.load_data({
+      :economic_profile => {
+        :median_household_income => "test/fixtures/median_income_fixture.csv",
+        :children_in_poverty => "test/fixtures/poverty_fixture.csv",
+        :free_or_reduced_price_lunch => "test/fixtures/free_lunch_fixture.csv",
+        :title_i => "test/fixtures/title_i_fixture.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+    assert_equal Hash, ha.district_hash.class
+  end
+
   def test_calculates_ratio_of_average_kg_participation_between_districts
     dr = DistrictRepository.new
     dr.load_data({
@@ -93,5 +107,4 @@ class HeadcountAnalystTest < Minitest::Test
     districts = ["ACADEMY 20", 'BAYFIELD 10 JT-R', 'YUMA SCHOOL DISTRICT 1']
     assert ha.kindergarten_participation_correlates_with_high_school_graduation(:across => districts)
   end
-
 end

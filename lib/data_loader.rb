@@ -46,13 +46,7 @@ class DataLoader
       file = CSV.open "#{file_name}",
       headers: true,
       header_converters: :symbol
-      if type == :enrollment
-        enrollments = parse_data(file, type)
-      elsif type == :statewide_testing
-        statewide_tests = parse_data(file, type)
-      elsif type == :economic_profile
-        economic_profiles = parse_data(file, type)
-      end
+      parse_data(file, type)
     end
   end
 
@@ -65,7 +59,6 @@ class DataLoader
       else
         year = year.split('-').map(&:to_i)
       end
-      # data_format = row[:dataformat].downcase
       data_format = clean_data_format(row[:dataformat])
       percentage = clean_percentage(row[:data], data_format, row[:poverty_level])
       if type == :enrollment
@@ -89,6 +82,8 @@ class DataLoader
       data_format = :percentage
     elsif data_format == 'number'
       data_format = :total
+    elsif data_format == 'currency'
+      data_format = :currency
     end
     data_format
   end
@@ -100,8 +95,6 @@ class DataLoader
     if !enrollments[district].has_key?(school_age)
       enrollments[district][school_age] = {}
     end
-    # enrollments[district] = { school_age => {} }
-    # {:kindergarten=>{}}
     enrollments[district][school_age][year] = percentage unless percentage == nil
   end
 
@@ -128,9 +121,6 @@ class DataLoader
     if !economic_profiles[district][economic_type].has_key?(year)
       economic_profiles[district][economic_type][year] = {}
     end
-    # if economic_type == :free_or_reduced_price_lunch && !economic_profiles[district][economic_type].has_key?(data_format)
-    #   economic_profiles[district][economic_type][year][data_format] = {}
-    # end
     if economic_type == :free_or_reduced_price_lunch
       economic_profiles[district][economic_type][year][data_format] = number unless number == nil
     else
@@ -150,19 +140,15 @@ class DataLoader
   # }
 
   def clean_percentage(number, data_format, poverty_level)
-    # regex => if it's not a number then nil
-    if number == 'N/A' || number == '#DIV/0!' || number == 'LNE'
-      nil
-    elsif data_format.downcase == 'currency'
-      number = number.to_i
-    elsif !poverty_level.nil? && data_format == :percentage
-      return number.to_f.round(3) if poverty_level == 'Eligible for Free or Reduced Lunch'
-    elsif !poverty_level.nil? && data_format == :total
-      return number.to_i if poverty_level == 'Eligible for Free or Reduced Lunch'
-    elsif data_format.downcase == :percentage
-      number.to_f.round(3)
-    else
-      nil
+    if number =~ /^\d+\.?\d*$/
+      return number.to_i if data_format == :currency
+      if !poverty_level.nil? && data_format == :percentage
+        return number.to_f.round(3) if poverty_level == 'Eligible for Free or Reduced Lunch'
+      elsif !poverty_level.nil? && data_format == :total
+        return number.to_i if poverty_level == 'Eligible for Free or Reduced Lunch'
+      elsif data_format.downcase == :percentage
+        number.to_f.round(3)
+      end
     end
   end
 

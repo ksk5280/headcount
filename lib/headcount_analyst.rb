@@ -4,6 +4,8 @@ require 'pry'
 class HeadcountAnalyst
   attr_reader :district_hash
 
+  GRADES = [3, 8]
+
   def initialize(district_repo)
     @district_hash = district_repo.districts
     # district_repo is an instance of DistrictRepository
@@ -86,6 +88,17 @@ class HeadcountAnalyst
     return true if correlations.count/
     (district_array.count) > 0.7
   end
+
+  def top_statewide_test_year_over_year_growth(grade, subject)
+    raise UnknownDataError, "#{grade} is not a known grade" unless GRADES.include?(grade)
+    raise InsufficientInformationError, "A grade must be provided to answer this question" if grade.nil?
+    #for each district do
+    #years = district_hash.fetch(district_name).fetch(grade).keys. sort
+    #district_hash.fetch(district_name).fetch(grade).fetch(years.last).fetch(subject) - district_hash.fetch(district_name).fetch(grade).fetch(years.first).fetch(subject)
+    #divided by
+    #(years.last - years.first)
+  end
+
 end
 if __FILE__ == $0
   dr = DistrictRepository.new

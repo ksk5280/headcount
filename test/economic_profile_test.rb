@@ -16,6 +16,7 @@ class EconomicProfileTest < Minitest::Test
     epr.find_by_name('ACADEMY 20')
   end
 
+meta t: true
   def test_economic_profile_works_with_loaded_data
     ep = economic_profile_from_data
     assert_equal 88279, ep.median_household_income_in_year(2010)
