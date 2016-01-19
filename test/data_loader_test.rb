@@ -63,4 +63,27 @@ class DataLoaderTest < Minitest::Test
     assert_equal 2, er.enrollments.fetch("ACADEMY 20").keys.count
   end
 
+  def test_clean_percentage_free_or_reduced_lunch_truncates
+    ep = DataLoader.new
+    percent = ep.clean_percentage('0.12743', :percentage, 'Eligible for Free or Reduced Lunch')
+    assert_equal 0.127, percent
+  end
+
+  def test_clean_percentage_free_lunch_only_returns_nil
+    ep = DataLoader.new
+    percent = ep.clean_percentage('0.08772', :percentage, 'Eligible for Free Lunch')
+    assert_nil percent
+  end
+
+  def test_clean_percentage_NA_data_returns_nil
+    ep = DataLoader.new
+    percent = ep.clean_percentage('N/A', :percentage, 'Eligible for Free or Reduced Lunch')
+    assert_nil percent
+  end
+
+  def test_clean_percentage_nil_data_returns_nil
+    ep = DataLoader.new
+    percent = ep.clean_percentage(nil, :percentage, 'Eligible for Free or Reduced Lunch')
+    assert_nil percent
+  end
 end

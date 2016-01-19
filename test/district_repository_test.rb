@@ -147,7 +147,6 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal EnrollmentRepository, dr.enrollment_repository.class
   end
 
-meta tag: true
   def test_creates_districts_with_economic_profile_data
     dr = DistrictRepository.new
     dr.load_data({
