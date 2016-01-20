@@ -107,4 +107,23 @@ class HeadcountAnalystTest < Minitest::Test
     districts = ["ACADEMY 20", 'BAYFIELD 10 JT-R', 'YUMA SCHOOL DISTRICT 1']
     assert ha.kindergarten_participation_correlates_with_high_school_graduation(:across => districts)
   end
+
+  def test_that_empty_data_is_removed_from_district_hash
+    dr = DistrictRepository.new
+    dr.load_data({
+      :statewide_testing =>
+        {
+        :third_grade => 'test/fixtures/grade_3_fixture.csv',
+        :eighth_grade => 'test/fixtures/grade_8_fixture.csv'
+      }
+      })
+    ha = HeadcountAnalyst.new(dr)
+    actual = ha.clean_district_hash("AGATE 300", :third_grade, :writing)
+    expected = {2008=>{:writing=>0.278}, 2009=>{:writing=>0.29}}
+    assert_equal expected, actual
+    actual = ha.clean_district_hash("AGATE 300", :third_grade, :math)
+    expected = {}
+    assert_equal expected, actual
+
+  end
 end
