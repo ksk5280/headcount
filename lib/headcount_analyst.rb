@@ -88,10 +88,17 @@ class HeadcountAnalyst
     (district_array.count) > 0.7
   end
 
-  def top_statewide_test_year_over_year_growth(data)
-    grade = data[:grade]
+  def error_check(grade)
     raise InsufficientInformationError, "A grade must be provided to answer this question" if grade.nil?
     raise UnknownDataError, "#{grade} is not a known grade" unless GRADES.include?(grade)
+  end
+
+
+
+  def top_statewide_test_year_over_year_growth(data)
+    grade = data[:grade]
+
+    error_check(grade)
 
     grade = symbolize_grade(grade)
     subject = data[:subject]
