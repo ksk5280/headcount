@@ -116,7 +116,7 @@ class HeadcountAnalystTest < Minitest::Test
         :third_grade => 'test/fixtures/grade_3_fixture.csv',
         :eighth_grade => 'test/fixtures/grade_8_fixture.csv'
       }
-      })
+    })
     ha = HeadcountAnalyst.new(dr)
     actual = ha.clean_district_hash("AGATE 300", :third_grade, :writing)
     expected = {2008=>{:writing=>0.278}, 2009=>{:writing=>0.29}}
@@ -124,6 +124,40 @@ class HeadcountAnalystTest < Minitest::Test
     actual = ha.clean_district_hash("AGATE 300", :third_grade, :math)
     expected = {}
     assert_equal expected, actual
+  end
 
+  meta t: true
+  def test_can_find_top_2_year_growth
+    dr = district_repository_with_testing_data
+    ha = HeadcountAnalyst.new(dr)
+    actual = ha.top_statewide_test_year_over_year_growth(grade: 3, top: 2, subject: :math)
+    expected = [["ACADEMY 20", -0.00366666666666667], ["COLORADO", 0.0031666666666666696]]
+    assert_equal expected, actual
+  end
+
+  def test_statewide_testing_relationships
+    dr = district_repository_with_testing_data
+    ha = HeadcountAnalyst.new(dr)
+
+    assert_equal "COLORADO", ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math).first
+    assert_in_delta 0.003, ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math).last, 0.005
+
+    assert_equal "ACADEMY 20", ha.top_statewide_test_year_over_year_growth(grade: 8, subject: :reading).first
+    assert_in_delta -0.0026, ha.top_statewide_test_year_over_year_growth(grade: 8, subject: :reading).last, 0.005
+
+    assert_equal "AGATE 300", ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :writing).first
+    assert_in_delta 0.012, ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :writing).last, 0.005
+  end
+
+  def district_repository_with_testing_data
+    dr = DistrictRepository.new
+    dr.load_data({
+      :statewide_testing =>
+        {
+        :third_grade => 'test/fixtures/grade_3_fixture.csv',
+        :eighth_grade => 'test/fixtures/grade_8_fixture.csv'
+      }
+    })
+    dr
   end
 end

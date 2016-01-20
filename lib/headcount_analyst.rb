@@ -2,7 +2,8 @@ require_relative 'district_repository'
 require 'pry'
 
 class HeadcountAnalyst
-  attr_reader :district_hash
+  attr_reader :district_hash,
+              :district_growth
 
   GRADES = [3, 8]
 
@@ -91,51 +92,56 @@ class HeadcountAnalyst
 
   def top_statewide_test_year_over_year_growth(data)
     grade = data[:grade]
-
     raise InsufficientInformationError, "A grade must be provided to answer this question" if grade.nil?
     raise UnknownDataError, "#{grade} is not a known grade" unless GRADES.include?(grade)
 
-    if grade == 3; grade = :third_grade
-    elsif grade == 8; grade = :eighth_grade
-    end
-
     grade = symbolize_grade(grade)
+    subject = data[:subject]
 
-
-
-
-    subject = data.fetch(:subject)
-    # for each district:
-    district_growth = []
+    @district_growth = []
     district_hash.each_key do |district|
-      grade_hash = clean_district_hash(district, grade, subject)
-      # highest year and lowest year for which there is subject and grade data
+      if subject == nil
+        subjects = [:math, :reading, :writing]
+        s = subjects.reduce(0) do |sum, subject|
+          sum + district_yoy_growth(district, grade, subject)[0][1]
+        end
+        district_growth.max_by {|growth_arr| growth_arr[1] }
 
-      years = grade_hash.keys.sort
-      if years.count >= 2
-
-        last_year_data = grade_hash.fetch(years.last).fetch(subject)
-        first_year_data = grade_hash.fetch(years.first).fetch(subject)
-        avg_percent_growth = (last_year_data - first_year_data) / (years.last - years.first)
-        district_growth << [district, avg_percent_growth ]
+      else
+        district_yoy_growth(district, grade, subject)
       end
     end
-    district_growth.max_by {|growth_arr| growth_arr[1] }
+    if data[:top]
+      num = data[:top]
+      sorted = district_growth.sort_by {|growth_arr| growth_arr[1] }
+      sorted[-num..-1]
+    else
+      district_growth.max_by {|growth_arr| growth_arr[1] }
+    end
 
+  end
+
+  def district_yoy_growth(district, grade, subject)
+    grade_hash = clean_district_hash(district, grade, subject)
+    years = grade_hash.keys.sort
+    if years.count >= 2
+      last_year_data = grade_hash.fetch(years.last).fetch(subject)
+      first_year_data = grade_hash.fetch(years.first).fetch(subject)
+      avg_percent_growth = (last_year_data - first_year_data) / (years.last - years.first)
+      district_growth << [ district, avg_percent_growth ]
+    end
   end
 
   def symbolize_grade(grade)
     { 3 => :third_grade, 8 => :eighth_grade }[grade]
-
   end
 
   def clean_district_hash(district, grade, subject)
-    district_grade_data = district_hash.fetch(district).fetch(grade)
+    district_grade_data = district_hash.fetch(district).fetch(grade).dup
     district_grade_data.keep_if { |_k, v| v.keys.include?(subject) }
   end
-
-
 end
+
 if __FILE__ == $0
   dr = DistrictRepository.new
   # file = "test/fixtures/kindergarten_edge_cases.csv"
