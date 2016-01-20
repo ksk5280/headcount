@@ -103,12 +103,13 @@ class HeadcountAnalyst
       if subject == nil
         subjects = [:math, :reading, :writing]
         s = subjects.reduce(0) do |sum, subject|
-          sum + district_yoy_growth(district, grade, subject)[0][1]
+          sum + district_yoy_growth(district, grade, subject)
         end
-        avg_percent_growth = district_growth.max_by {|growth_arr| growth_arr[1] }
-        district_growth << [ district, avg_percent_growth ]
       else
-        district_yoy_growth(district, grade, subject)
+        avg_percent_growth = district_yoy_growth(district, grade, subject)
+        next if avg_percent_growth.nil?
+        district_growth << [ district, avg_percent_growth ]
+        # avg_percent_growth = district_growth.max_by {|growth_arr| growth_arr[1] }
       end
     end
     if data[:top]
