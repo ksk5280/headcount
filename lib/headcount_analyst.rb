@@ -100,13 +100,23 @@ class HeadcountAnalyst
     district_hash.each_key do |district|
       if subject == nil
         subjects = [:math, :reading, :writing]
-        s = subjects.reduce(0) do |sum, subject|
+        valid = subjects.select do |subject|
+          # puts "before yoy, district #{district}, Ouray: #{district_hash['OURAY R-1'][:eighth_grade]}"
+          district_yoy_growth(district, grade, subject)
+          # puts "after yoy, district #{district}, Ouray: #{district_hash['OURAY R-1'][:eighth_grade]}"
+        end
+        num = valid.count
+        next if num <= 1
+        subject_sum = valid.reduce(0) do |sum, subject|
           sum + district_yoy_growth(district, grade, subject)
         end
+        avg_across_subjects = subject_sum / num
+        district_growth << [district, avg_across_subjects]
       else
         avg_percent_growth = district_yoy_growth(district, grade, subject)
         next if avg_percent_growth.nil?
         district_growth << [ district, avg_percent_growth ]
+        # puts "district #{district}, subject #{subject}, grade #{grade}, #{district_yoy_growth(district, grade, subject)}"
       end
     end
     if data[:top]
@@ -116,11 +126,13 @@ class HeadcountAnalyst
     else
       district_growth.max_by {|growth_arr| growth_arr[1] }
     end
-
+    # require "pry"
+    # binding.pry
   end
 
   def district_yoy_growth(district, grade, subject)
     grade_hash = clean_district_hash(district, grade, subject)
+    return nil if grade_hash.empty?
     years = grade_hash.keys.sort
     if years.count >= 2
       last_year_data = grade_hash.fetch(years.last).fetch(subject)
@@ -136,7 +148,7 @@ class HeadcountAnalyst
 
   def clean_district_hash(district, grade, subject)
     district_grade_data = district_hash.fetch(district).fetch(grade).dup
-    district_grade_data.keep_if { |_k, v| v.keys.include?(subject) }
+    d = district_grade_data.keep_if { |_k, v| v.keys.include?(subject) }
   end
 end
 
