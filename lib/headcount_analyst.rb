@@ -105,8 +105,8 @@ class HeadcountAnalyst
         s = subjects.reduce(0) do |sum, subject|
           sum + district_yoy_growth(district, grade, subject)[0][1]
         end
-        district_growth.max_by {|growth_arr| growth_arr[1] }
-
+        avg_percent_growth = district_growth.max_by {|growth_arr| growth_arr[1] }
+        district_growth << [ district, avg_percent_growth ]
       else
         district_yoy_growth(district, grade, subject)
       end
@@ -128,8 +128,8 @@ class HeadcountAnalyst
       last_year_data = grade_hash.fetch(years.last).fetch(subject)
       first_year_data = grade_hash.fetch(years.first).fetch(subject)
       avg_percent_growth = (last_year_data - first_year_data) / (years.last - years.first)
-      district_growth << [ district, avg_percent_growth ]
     end
+    avg_percent_growth
   end
 
   def symbolize_grade(grade)
