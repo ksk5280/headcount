@@ -95,28 +95,34 @@ class HeadcountAnalyst
 
     grade = symbolize_grade(grade)
     subject = data[:subject]
-
+    weighting = data[:weighting]
     @district_growth = []
     district_hash.each_key do |district|
       if subject == nil
         subjects = [:math, :reading, :writing]
         valid = subjects.select do |subject|
-          # puts "before yoy, district #{district}, Ouray: #{district_hash['OURAY R-1'][:eighth_grade]}"
           district_yoy_growth(district, grade, subject)
-          # puts "after yoy, district #{district}, Ouray: #{district_hash['OURAY R-1'][:eighth_grade]}"
         end
         num = valid.count
         next if num <= 1
         subject_sum = valid.reduce(0) do |sum, subject|
-          sum + district_yoy_growth(district, grade, subject)
+          unless weighting.nil?
+            unweighted = district_yoy_growth(district, grade, subject)
+            sum + (weighting[subject] * unweighted)
+          else
+            sum + district_yoy_growth(district, grade, subject)
+          end
         end
-        avg_across_subjects = subject_sum / num
+        if weighting.nil?
+          avg_across_subjects = subject_sum / num
+        else
+          avg_across_subjects = subject_sum
+        end
         district_growth << [district, avg_across_subjects]
       else
         avg_percent_growth = district_yoy_growth(district, grade, subject)
         next if avg_percent_growth.nil?
         district_growth << [ district, avg_percent_growth ]
-        # puts "district #{district}, subject #{subject}, grade #{grade}, #{district_yoy_growth(district, grade, subject)}"
       end
     end
     if data[:top]
@@ -126,8 +132,6 @@ class HeadcountAnalyst
     else
       district_growth.max_by {|growth_arr| growth_arr[1] }
     end
-    # require "pry"
-    # binding.pry
   end
 
   def district_yoy_growth(district, grade, subject)
