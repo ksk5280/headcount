@@ -169,7 +169,7 @@ meta t: true
     actual = weighted_actual_arr.first
     assert_equal 'ACADEMY 20', actual
     actual = weighted_actual_arr.last
-    assert_in_delta 0.00241, actual, 0.005
+    assert_in_delta 0.002, actual, 0.005
   end
 
   def district_repository_with_testing_data
