@@ -3,40 +3,38 @@ require 'pry'
 
 class DataLoader
   attr_reader :enrollments,
-              :school_age,
               :statewide_tests,
-              :testing_type,
               :economic_profiles,
-              :economic_type
+              :type,
+              :results
+
+  def initialize
+    @results = {}
+    @enrollments = {}
+    @statewide_tests = {}
+    @economic_profiles = {}
+  end
 
   def load_enrollments_csv(data)
-    @enrollments = {}
-    data.fetch(:enrollment).each_key do |key|
-      @school_age = key
-      file_name = data.fetch(:enrollment).fetch(key)
-      load_csv(file_name, :enrollment)
-    end
+    load(:enrollment, data)
     enrollments
   end
 
   def load_statewide_tests_csv(data)
-    @statewide_tests = {}
-    data.fetch(:statewide_testing).each_key do |key|
-      @testing_type = key
-      file_name = data.fetch(:statewide_testing).fetch(key)
-      load_csv(file_name, :statewide_testing)
-    end
+    load(:statewide_testing, data)
     statewide_tests
   end
 
   def load_economic_csv(data)
-    @economic_profiles = {}
-    data.fetch(:economic_profile).each_key do |key|
-      @economic_type = key
-      file_name = data.fetch(:economic_profile).fetch(key)
-      load_csv(file_name, :economic_profile)
-    end
+    load(:economic_profile, data)
     economic_profiles
+  end
+
+  def load(key, data)
+    data.fetch(key).each do |k, file_name|
+      @type = k
+      load_csv(file_name, key)
+    end
   end
 
   def load_csv(file_name, type)
@@ -52,15 +50,14 @@ class DataLoader
 
   def parse_data(data, type)
     data.each do |row|
+
       district = row[:location].upcase
-      year = row[:timeframe]
-      if year.length < 5
-        year = year.to_i
-      else
-        year = year.split('-').map(&:to_i)
-      end
+
+      year = format_year(row[:timeframe])
+
       data_format = clean_data_format(row[:dataformat])
       percentage = clean_percentage(row[:data], data_format, row[:poverty_level])
+
       if type == :enrollment
         create_enrollments_hash(district, year, percentage)
       elsif type == :statewide_testing
@@ -76,6 +73,14 @@ class DataLoader
     end
   end
 
+  def format_year(unformatted_year)
+    if unformatted_year.length < 5
+      unformatted_year.to_i
+    else
+      unformatted_year.split('-').map(&:to_i)
+    end
+  end
+
   def clean_data_format(data_format)
     data_format = data_format.downcase
     if data_format == 'percent'
@@ -88,43 +93,55 @@ class DataLoader
     data_format
   end
 
+  def create_hash(*args, hash)
+    args.each do |arg|
+      if !hash.has_key? arg
+        hash[arg] = {}
+      end
+    end
+  end
+
   def create_enrollments_hash(district, year, percentage)
-    if !enrollments.has_key?(district)
+
+
+    unless enrollments.has_key?(district)
       enrollments[district] = {}
     end
-    if !enrollments[district].has_key?(school_age)
-      enrollments[district][school_age] = {}
+    unless enrollments[district].has_key?(type)
+      enrollments[district][type] = {}
     end
-    enrollments[district][school_age][year] = percentage unless percentage == nil
+    unless percentage == nil
+      enrollments[district][type][year] = percentage
+    end
   end
 
   def create_test_hash(district, subject_or_race, year, percentage)
     if !statewide_tests.has_key?(district)
       statewide_tests[district] = {}
     end
-    if !statewide_tests[district].has_key?(testing_type)
-      statewide_tests[district][testing_type] = {}
+    if !statewide_tests[district].has_key?(type)
+      statewide_tests[district][type] = {}
     end
-    if !statewide_tests[district][testing_type].has_key?(year)
-      statewide_tests[district][testing_type][year] = {}
+    if !statewide_tests[district][type].has_key?(year)
+      statewide_tests[district][type][year] = {}
     end
-    statewide_tests[district][testing_type][year][subject_or_race] = percentage unless percentage == nil
+    statewide_tests[district][type][year][subject_or_race] = percentage unless percentage == nil
   end
 
   def create_economic_hash(district, year, number, data_format)
     if !economic_profiles.has_key?(district)
       economic_profiles[district] = {}
     end
-    if !economic_profiles[district].has_key?(economic_type)
-      economic_profiles[district][economic_type] = {}
+    if !economic_profiles[district].has_key?(type)
+      economic_profiles[district][type] = {}
     end
-    if !economic_profiles[district][economic_type].has_key?(year)
-      economic_profiles[district][economic_type][year] = {}
+    if !economic_profiles[district][type].has_key?(year)
+      economic_profiles[district][type][year] = {}
     end
-    if economic_type == :free_or_reduced_price_lunch
-      economic_profiles[district][economic_type][year][data_format] = number unless number == nil
+    if type == :free_or_reduced_price_lunch
+      economic_profiles[district][type][year][data_format] = number unless number == nil
     else
-      economic_profiles[district][economic_type][year] = number unless number == nil
+      economic_profiles[district][type][year] = number unless number == nil
     end
   end
 

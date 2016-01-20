@@ -13,18 +13,18 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_rate_variation(district1_name, compared)
-    district1_average = find_average(district1_name, :kindergarten)
-    district2_name = compared.fetch(:against)
-    district2_average = find_average(district2_name, :kindergarten)
-
-    ratio = district1_average / district2_average
+    rate_variation(district1_name, compared, :kindergarten)
   end
 
   def graduation_rate_variation(district1_name, compared)
-    district1_average = find_average(district1_name, :high_school_graduation)
+    rate_variation(district1_name, compared, :high_school_graduation)
+  end
+
+  def rate_variation(district1_name, compared, type)
+    district1_average = find_average(district1_name, type)
     district2_name = compared.fetch(:against)
-    district2_average = find_average(district2_name, :high_school_graduation)
-    ratio = district1_average / district2_average
+    district2_average = find_average(district2_name, type)
+    district1_average / district2_average
   end
 
   # district_average = for any district the sum the percentages and divide by the total number of percentages
@@ -98,6 +98,12 @@ class HeadcountAnalyst
     if grade == 3; grade = :third_grade
     elsif grade == 8; grade = :eighth_grade
     end
+
+    grade = symbolize_grade(grade)
+
+
+
+
     subject = data.fetch(:subject)
     # for each district:
     district_growth = []
@@ -115,6 +121,11 @@ class HeadcountAnalyst
       end
     end
     district_growth.max_by {|growth_arr| growth_arr[1] }
+
+  end
+
+  def symbolize_grade(grade)
+    { 3 => :third_grade, 8 => :eighth_grade }[grade]
 
   end
 
