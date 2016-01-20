@@ -28,7 +28,7 @@ class HeadcountAnalyst
     district1_average / district2_average
   end
 
-  # district_average = for any district the sum the percentages and divide by the total number of percentages
+  # district_average = for any district the sum of the percentages and divide by the total number of percentages
   def find_average(district_name, school_age)
     district_participation = district_hash.fetch(district_name).fetch(school_age)
     district_sum = district_participation.values.reduce(0, :+)
@@ -36,7 +36,6 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_rate_variation_trend(district1_name, compared)
-    #find district repo values by year and compare them.
     d1_participation = district_hash.fetch(district1_name).fetch(:kindergarten)
 
     district2_name = compared.fetch(:against)
@@ -44,11 +43,10 @@ class HeadcountAnalyst
 
     d1_participation.merge(d2_participation) { |year, d1, d2| ( d1 / d2 ).round(3) }
 
-    #return years with value of ratio between district1 and compared
+    #returns years with value of ratio between district1 and compared
   end
 
   def kindergarten_participation_against_high_school_graduation(district_name)
-    # note: "EAST YUMA COUNTY RJ-2" and "WEST YUMA COUNTY RJ-1" have no data for kindergarten participation"
     return 0 if district_hash.fetch(district_name).fetch(:kindergarten).empty? || district_hash.fetch(district_name).fetch(:high_school_graduation).empty?
 
     kindergarten_variation = kindergarten_participation_rate_variation(district_name, :against => "COLORADO")
@@ -84,7 +82,7 @@ class HeadcountAnalyst
   def correlation_across_districts(district_array)
     correlations = district_array.select do |district|
       kindergarten_participation_against_high_school_graduation(district).between?(0.6, 1.5)
-      #yields and array of correlations for all districts provided
+      #yields an array of correlations for all districts provided
     end
     return true if correlations.count/
     (district_array.count) > 0.7
@@ -109,7 +107,6 @@ class HeadcountAnalyst
         avg_percent_growth = district_yoy_growth(district, grade, subject)
         next if avg_percent_growth.nil?
         district_growth << [ district, avg_percent_growth ]
-        # avg_percent_growth = district_growth.max_by {|growth_arr| growth_arr[1] }
       end
     end
     if data[:top]
