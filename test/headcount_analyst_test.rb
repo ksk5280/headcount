@@ -126,7 +126,6 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal expected, actual
   end
 
-  meta t: true
   def test_can_find_top_2_year_growth
     dr = district_repository_with_testing_data
     ha = HeadcountAnalyst.new(dr)
@@ -147,6 +146,30 @@ class HeadcountAnalystTest < Minitest::Test
 
     assert_equal "AGATE 300", ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :writing).first
     assert_in_delta 0.012, ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :writing).last, 0.005
+  end
+
+  def test_district_growth_over_all_subjects
+    dr = district_repository_with_testing_data
+    ha = HeadcountAnalyst.new(dr)
+    ha.district_yoy_growth('AGATE 300', :third_grade, :math)
+  end
+
+  def test_statewide_year_over_year_growth_overall
+    dr = district_repository_with_testing_data
+    ha = HeadcountAnalyst.new(dr)
+    actual = ha.top_statewide_test_year_over_year_growth(grade: 3).last
+    assert_in_delta 0.002, actual, 0.005
+  end
+
+meta t: true
+  def test_weighted_average_growth
+    dr = district_repository_with_testing_data
+    ha = HeadcountAnalyst.new(dr)
+    weighted_actual_arr = ha.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
+    actual = weighted_actual_arr.first
+    assert_equal 'ACADEMY 20', actual
+    actual = weighted_actual_arr.last
+    assert_in_delta 0.00241, actual, 0.005
   end
 
   def district_repository_with_testing_data
