@@ -93,17 +93,7 @@ class HeadcountAnalyst
     raise UnknownDataError, "#{grade} is not a known grade" unless GRADES.include?(grade)
   end
 
-
-
-  def top_statewide_test_year_over_year_growth(data)
-    grade = data[:grade]
-
-    error_check(grade)
-
-    grade = symbolize_grade(grade)
-    subject = data[:subject]
-    weighting = data[:weighting]
-    @district_growth = []
+  def avg_yoy_growth_across_subjects(subject, grade, weighting)
     district_hash.each_key do |district|
       if subject == nil
         subjects = [:math, :reading, :writing]
@@ -132,6 +122,9 @@ class HeadcountAnalyst
         district_growth << [ district, avg_percent_growth ]
       end
     end
+  end
+
+  def top_check(data)
     if data[:top]
       num = data[:top]
       sorted = district_growth.sort_by {|growth_arr| growth_arr[1] }
@@ -139,6 +132,17 @@ class HeadcountAnalyst
     else
       district_growth.max_by {|growth_arr| growth_arr[1] }
     end
+  end
+
+  def top_statewide_test_year_over_year_growth(data)
+    grade = data[:grade]
+    error_check(grade)
+    grade = symbolize_grade(grade)
+    subject = data[:subject]
+    weighting = data[:weighting]
+    @district_growth = []
+    avg_yoy_growth_across_subjects(subject, grade, weighting)
+    top_check(data)
   end
 
   def district_yoy_growth(district, grade, subject)
