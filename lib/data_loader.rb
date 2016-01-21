@@ -39,7 +39,8 @@ class DataLoader
 
   def load_csv(file_name, type)
     if File.exist?("#{file_name}") == false
-      raise InvalidFileError,  "This is not a valid file. Please provide a valid CSV file."
+      raise InvalidFileError,  "This is not a valid file.
+                                Please provide a valid CSV file."
     else
       file = CSV.open "#{file_name}",
       headers: true,
@@ -56,7 +57,8 @@ class DataLoader
       year = format_year(row[:timeframe])
 
       data_format = clean_data_format(row[:dataformat])
-      percentage = clean_percentage(row[:data], data_format, row[:poverty_level])
+      percentage = clean_percentage(row[:data],
+                   data_format, row[:poverty_level])
 
       if type == :enrollment
         create_enrollments_hash(district, year, percentage)
@@ -102,8 +104,6 @@ class DataLoader
   end
 
   def create_enrollments_hash(district, year, percentage)
-
-
     unless enrollments.has_key?(district)
       enrollments[district] = {}
     end
@@ -125,7 +125,8 @@ class DataLoader
     if !statewide_tests[district][type].has_key?(year)
       statewide_tests[district][type][year] = {}
     end
-    statewide_tests[district][type][year][subject_or_race] = percentage unless percentage == nil
+    statewide_tests[district][type][year][subject_or_race] =
+      percentage unless percentage == nil
   end
 
   def create_economic_hash(district, year, number, data_format)
@@ -139,53 +140,25 @@ class DataLoader
       economic_profiles[district][type][year] = {}
     end
     if type == :free_or_reduced_price_lunch
-      economic_profiles[district][type][year][data_format] = number unless number == nil
+      economic_profiles[district][type][year][data_format] =
+        number unless number == nil
     else
       economic_profiles[district][type][year] = number unless number == nil
     end
   end
 
-  # enrollments:
-  # {
-  #   "district_A" => { kindergarten => { year1 => %, year2 => %, ... },
-  #                     high_school  => { year1 => %, year2 => %, ... }
-  #                    }
-  #   "district_B" => { kindergarten => { year1 => %, year2 => %, ... },
-  #                     high_school  => { year1 => %, year2 => %, ... }
-  #                    }
-  #   ...
-  # }
-
   def clean_percentage(number, data_format, poverty_level)
     if number =~ /^\d+\.?\d*$/
       return number.to_i if data_format == :currency
       if !poverty_level.nil? && data_format == :percentage
-        return number.to_f.round(3) if poverty_level == 'Eligible for Free or Reduced Lunch'
+        return number.to_f.round(3) if poverty_level ==
+          'Eligible for Free or Reduced Lunch'
       elsif !poverty_level.nil? && data_format == :total
-        return number.to_i if poverty_level == 'Eligible for Free or Reduced Lunch'
+        return number.to_i if poverty_level ==
+          'Eligible for Free or Reduced Lunch'
       elsif data_format.downcase == :percentage
         number.to_f.round(3)
       end
     end
   end
-
-end
-
-if __FILE__ == $0
-  # dl = DataLoader.new
-  # puts dl.load_enrollments_csv({
-  #   :enrollment => {
-  #     :kindergarten => "test/fixtures/small_kg_fixture.csv",
-  #     :high_school_graduation => "test/fixtures/small_hs_fixture.csv"
-  #   }
-  # })
-  # dl = DataLoader.new.load_enrollments_csv({
-  #   :enrollment => {
-  #     :kindergarten => "test/fixtures/kindergarten_fixture.csv"
-  #   }
-  # })
-  # puts "enrollments at bottom"
-  # puts dl
-  # puts dl.count
-
 end
