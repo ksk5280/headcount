@@ -13,9 +13,12 @@ class EconomicProfileRepository
     if economic_profiles.has_key?(name)
       EconomicProfile.new({
         :name => name,
-        :median_household_income => economic_profiles.fetch(name)[:median_household_income],
-        :children_in_poverty => economic_profiles.fetch(name)[:children_in_poverty],
-        :free_or_reduced_price_lunch => economic_profiles.fetch(name)[:free_or_reduced_price_lunch],
+        :median_household_income =>
+          economic_profiles.fetch(name)[:median_household_income],
+        :children_in_poverty =>
+          economic_profiles.fetch(name)[:children_in_poverty],
+        :free_or_reduced_price_lunch =>
+          economic_profiles.fetch(name)[:free_or_reduced_price_lunch],
         :title_i => economic_profiles.fetch(name)[:title_i]
       })
     end

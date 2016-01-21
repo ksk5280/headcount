@@ -39,7 +39,8 @@ class DataLoader
 
   def load_csv(file_name, type)
     if File.exist?("#{file_name}") == false
-      raise InvalidFileError,  "This is not a valid file. Please provide a valid CSV file."
+      raise InvalidFileError,  "This is not a valid file.
+                                Please provide a valid CSV file."
     else
       file = CSV.open "#{file_name}",
       headers: true,
@@ -54,6 +55,8 @@ class DataLoader
       year = format_year(row[:timeframe])
       data_format = clean_data_format(row[:dataformat])
       percentage = clean_percentage(row[:data], data_format, row[:poverty_level])
+      percentage = clean_percentage(row[:data],
+                   data_format, row[:poverty_level])
       if type == :enrollment
         create_enrollments_hash(district, year, percentage)
       elsif type == :statewide_testing
@@ -89,22 +92,6 @@ class DataLoader
     data_format
   end
 
-  # def create_enrollments_hash(district, year, percentage)
-  #   type = :enrollment
-  #   build_or_check_hash(enrollments, district, type, year).dup
-  #   unless percentage == nil
-  #     enrollments[district][type][year] = percentage
-  #   end
-  # end
-  #
-  # def build_or_check_hash(a_hash, *some_keys)
-  #   temp_hash = a_hash
-  #   some_keys.each do |key|
-  #     temp_hash[key] = {} if temp_hash.empty?
-  #     temp_hash = temp_hash[key]
-  #   end
-  # end
-
   def start_hash(district)
     unless enrollments.has_key?(district)
       enrollments[district] = {}
@@ -134,7 +121,8 @@ class DataLoader
     if !statewide_tests[district][type].has_key?(year)
       statewide_tests[district][type][year] = {}
     end
-    statewide_tests[district][type][year][subject_or_race] = percentage unless percentage == nil
+    statewide_tests[district][type][year][subject_or_race] =
+      percentage unless percentage == nil
   end
 
   def create_economic_hash(district, year, number, data_format)
@@ -148,7 +136,8 @@ class DataLoader
       economic_profiles[district][type][year] = {}
     end
     if type == :free_or_reduced_price_lunch
-      economic_profiles[district][type][year][data_format] = number unless number == nil
+      economic_profiles[district][type][year][data_format] =
+        number unless number == nil
     else
       economic_profiles[district][type][year] = number unless number == nil
     end
@@ -158,9 +147,11 @@ class DataLoader
     if number =~ /^\d+\.?\d*$/
       return number.to_i if data_format == :currency
       if !poverty_level.nil? && data_format == :percentage
-        return number.to_f.round(3) if poverty_level == 'Eligible for Free or Reduced Lunch'
+        return number.to_f.round(3) if poverty_level ==
+          'Eligible for Free or Reduced Lunch'
       elsif !poverty_level.nil? && data_format == :total
-        return number.to_i if poverty_level == 'Eligible for Free or Reduced Lunch'
+        return number.to_i if poverty_level ==
+          'Eligible for Free or Reduced Lunch'
       elsif data_format.downcase == :percentage
         number.to_f.round(3)
       end

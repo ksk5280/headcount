@@ -37,6 +37,21 @@ class HeadcountAnalyst
     d2_name = compared.fetch(:against)
     d2_participation = district_hash.fetch(d2_name).fetch(:kindergarten)
     d1_participation.merge(d2_participation) { |year, d1, d2| ( d1 / d2 ).round(3) }
+    district_participation =
+      district_hash.fetch(district_name).fetch(school_age)
+    district_sum = district_participation.values.reduce(0, :+)
+    district_average = district_sum / district_participation.keys.count
+  end
+
+  def kindergarten_participation_rate_variation_trend(district1_name, compared)
+    d1_participation = district_hash.fetch(district1_name).fetch(:kindergarten)
+
+    district2_name = compared.fetch(:against)
+    d2_participation = district_hash.fetch(district2_name).fetch(:kindergarten)
+
+    d1_participation.merge(d2_participation) do |year, d1, d2|
+      ( d1 / d2 ).round(3)
+    end
   end
 
   def kindergarten_participation_against_high_school_graduation(district_name)
@@ -44,6 +59,13 @@ class HeadcountAnalyst
     kg_variation = kindergarten_participation_rate_variation(district_name, :against => "COLORADO")
     grad_variation = graduation_rate_variation(district_name, :against => "COLORADO")
     kg_variation / grad_variation
+
+    kindergarten_variation =
+      kindergarten_participation_rate_variation(district_name,
+      :against => "COLORADO")
+    graduation_variation = graduation_rate_variation(district_name,
+      :against => "COLORADO")
+    kindergarten_variation / graduation_variation
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(correlation)
@@ -80,8 +102,10 @@ class HeadcountAnalyst
   end
 
   def error_check(grade)
-    raise InsufficientInformationError, "A grade must be provided to answer this question" if grade.nil?
-    raise UnknownDataError, "#{grade} is not a known grade" unless GRADES.include?(grade)
+    raise InsufficientInformationError,
+      "A grade must be provided to answer this question" if grade.nil?
+    raise UnknownDataError,
+      "#{grade} is not a known grade" unless GRADES.include?(grade)
   end
 
   def district_yoy_growth(district, grade, subject)
@@ -91,7 +115,8 @@ class HeadcountAnalyst
     if years.count >= 2
       last_year_data = grade_hash.fetch(years.last).fetch(subject)
       first_year_data = grade_hash.fetch(years.first).fetch(subject)
-      avg_percent_growth = (last_year_data - first_year_data) / (years.last - years.first)
+      avg_percent_growth =
+        (last_year_data - first_year_data) / (years.last - years.first)
     end
     avg_percent_growth
   end

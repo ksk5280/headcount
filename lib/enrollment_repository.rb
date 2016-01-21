@@ -13,8 +13,10 @@ class EnrollmentRepository
     if enrollments.has_key?(name)
       Enrollment.new({
         :name => name,
-        :kindergarten_participation => enrollments.fetch(name)[:kindergarten],
-        :high_school_graduation => enrollments.fetch(name)[:high_school_graduation]
+        :kindergarten_participation =>
+          enrollments.fetch(name)[:kindergarten],
+        :high_school_graduation =>
+          enrollments.fetch(name)[:high_school_graduation]
       })
     end
   end

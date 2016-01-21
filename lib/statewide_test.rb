@@ -85,11 +85,13 @@ class StatewideTest
   end
 
   def grade_error_check(subject, grade, year)
-    raise UnknownDataError unless SUBJECTS.include?(subject) && GRADE.include?(grade) && years(subject).include?(year)
+    raise UnknownDataError unless SUBJECTS.include?(subject) &&
+      GRADE.include?(grade) && years(subject).include?(year)
   end
 
   def race_error_check(subject, race, year)
-    raise UnknownDataError unless SUBJECTS.include?(subject) && RACES.include?(race) && years(subject).include?(year)
+    raise UnknownDataError unless SUBJECTS.include?(subject) &&
+      RACES.include?(race) && years(subject).include?(year)
   end
   
   def years(subject)

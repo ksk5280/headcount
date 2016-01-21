@@ -31,7 +31,9 @@ class EconomicProfile
   end
 
   def year_in_range?(year)
-    median_household_income.keys.any? { |year_range| year.between?(year_range[0], year_range[1]) }
+    median_household_income.keys.any? do |year_range|
+      year.between?(year_range[0], year_range[1])
+    end
   end
 
   def median_household_income_average
@@ -46,12 +48,14 @@ class EconomicProfile
   end
 
   def free_or_reduced_price_lunch_percentage_in_year(year)
-    raise UnknownDataError unless free_or_reduced_price_lunch.keys.include?(year)
+    raise UnknownDataError unless
+      free_or_reduced_price_lunch.keys.include?(year)
     free_or_reduced_price_lunch.fetch(year).fetch(:percentage)
   end
 
   def free_or_reduced_price_lunch_number_in_year(year)
-    raise UnknownDataError unless free_or_reduced_price_lunch.keys.include?(year)
+    raise UnknownDataError unless
+      free_or_reduced_price_lunch.keys.include?(year)
     free_or_reduced_price_lunch.fetch(year).fetch(:total)
   end
 
