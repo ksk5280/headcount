@@ -9,61 +9,53 @@ class HeadcountAnalyst
 
   def initialize(district_repo)
     @district_hash = district_repo.districts
-    # district_repo is an instance of DistrictRepository
-    # district_hash is a hash of all districts and their school_age and their participation values { year => percentage }
   end
 
-  def kindergarten_participation_rate_variation(district1_name, compared)
-    rate_variation(district1_name, compared, :kindergarten)
+  def kindergarten_participation_rate_variation(d1_name, compared)
+    rate_variation(d1_name, compared, :kindergarten)
   end
 
-  def graduation_rate_variation(district1_name, compared)
-    rate_variation(district1_name, compared, :high_school_graduation)
+  def graduation_rate_variation(d1_name, compared)
+    rate_variation(d1_name, compared, :high_school_graduation)
   end
 
-  def rate_variation(district1_name, compared, type)
-    district1_average = find_average(district1_name, type)
-    district2_name = compared.fetch(:against)
-    district2_average = find_average(district2_name, type)
-    district1_average / district2_average
+  def rate_variation(d1_name, compared, type)
+    d1_avg = find_average(d1_name, type)
+    d2_name = compared.fetch(:against)
+    d2_avg = find_average(d2_name, type)
+    d1_avg / d2_avg
   end
 
-  # district_average = for any district the sum of the percentages and divide by the total number of percentages
   def find_average(district_name, school_age)
-    district_participation = district_hash.fetch(district_name).fetch(school_age)
-    district_sum = district_participation.values.reduce(0, :+)
-    district_average = district_sum / district_participation.keys.count
+    participation = district_hash.fetch(district_name).fetch(school_age)
+    district_sum = participation.values.reduce(0, :+)
+    district_sum / participation.keys.count
   end
 
-  def kindergarten_participation_rate_variation_trend(district1_name, compared)
-    d1_participation = district_hash.fetch(district1_name).fetch(:kindergarten)
-
-    district2_name = compared.fetch(:against)
-    d2_participation = district_hash.fetch(district2_name).fetch(:kindergarten)
-
+  def kindergarten_participation_rate_variation_trend(d1_name, compared)
+    d1_participation = district_hash.fetch(d1_name).fetch(:kindergarten)
+    d2_name = compared.fetch(:against)
+    d2_participation = district_hash.fetch(d2_name).fetch(:kindergarten)
     d1_participation.merge(d2_participation) { |year, d1, d2| ( d1 / d2 ).round(3) }
-
-    #returns years with value of ratio between district1 and compared
   end
 
   def kindergarten_participation_against_high_school_graduation(district_name)
     return 0 if district_hash.fetch(district_name).fetch(:kindergarten).empty? || district_hash.fetch(district_name).fetch(:high_school_graduation).empty?
-
-    kindergarten_variation = kindergarten_participation_rate_variation(district_name, :against => "COLORADO")
-    graduation_variation = graduation_rate_variation(district_name, :against => "COLORADO")
-    kindergarten_variation / graduation_variation
+    kg_variation = kindergarten_participation_rate_variation(district_name, :against => "COLORADO")
+    grad_variation = graduation_rate_variation(district_name, :against => "COLORADO")
+    kg_variation / grad_variation
   end
 
-  def kindergarten_participation_correlates_with_high_school_graduation(district_correlation)
-    if district_correlation.key?(:for)
-      district_name = district_correlation.fetch(:for)
-      if district_name == 'STATEWIDE'
+  def kindergarten_participation_correlates_with_high_school_graduation(correlation)
+    if correlation.key?(:for)
+      name = correlation.fetch(:for)
+      if name == 'STATEWIDE'
         correlation_for_statewide
       else
-        correlation_for_one_district(district_name)
+        correlation_for_one_district(name)
       end
     else
-      district_array = district_correlation.fetch(:across)
+      district_array = correlation.fetch(:across)
       correlation_across_districts(district_array)
     end
   end
@@ -82,9 +74,8 @@ class HeadcountAnalyst
   def correlation_across_districts(district_array)
     correlations = district_array.select do |district|
       kindergarten_participation_against_high_school_graduation(district).between?(0.6, 1.5)
-      #yields an array of correlations for all districts provided
     end
-    return true if correlations.count/
+    return true if correlations.count /
     (district_array.count) > 0.7
   end
 
@@ -92,7 +83,7 @@ class HeadcountAnalyst
     raise InsufficientInformationError, "A grade must be provided to answer this question" if grade.nil?
     raise UnknownDataError, "#{grade} is not a known grade" unless GRADES.include?(grade)
   end
-  
+
   def district_yoy_growth(district, grade, subject)
     grade_hash = clean_district_hash(district, grade, subject)
     return nil if grade_hash.empty?
@@ -157,7 +148,6 @@ class HeadcountAnalyst
     end
   end
 
-
   def symbolize_grade(grade)
     { 3 => :third_grade, 8 => :eighth_grade }[grade]
   end
@@ -166,27 +156,4 @@ class HeadcountAnalyst
     district_grade_data = district_hash.fetch(district).fetch(grade).dup
     d = district_grade_data.keep_if { |_k, v| v.keys.include?(subject) }
   end
-end
-
-if __FILE__ == $0
-  dr = DistrictRepository.new
-  # file = "test/fixtures/kindergarten_edge_cases.csv"
-  # file = "data/Kindergartners in full-day program.csv"
-  # dr.load_data({
-  #   :enrollment => {
-  #     :kindergarten => file
-  #   }
-  # })
-  # # dr.load_data({
-  # #   :enrollment => {
-  # #     :kindergarten => "./test/fixtures/small_kg_fixture.csv",
-  # #     :high_school_graduation => "./test/fixtures/small_hs_fixture.csv"}})
-  # ha = HeadcountAnalyst.new(dr)
-  # ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
-  dr = DistrictRepository.new
-  dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv",
-                                :high_school_graduation => "./data/High school graduation rates.csv"}})
-  ha = HeadcountAnalyst.new(dr)
-  districts = ["ACADEMY 20", 'PARK (ESTES PARK) R-3', 'YUMA SCHOOL DISTRICT 1']
-   ha.kindergarten_participation_correlates_with_high_school_graduation(:across => districts)
 end

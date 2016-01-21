@@ -10,5 +10,4 @@ class District
     @statewide_test = data[:statewide_testing]
     @economic_profile = data[:economic_profile]
   end
-
 end

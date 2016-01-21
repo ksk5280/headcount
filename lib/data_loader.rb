@@ -154,17 +154,6 @@ class DataLoader
     end
   end
 
-  # enrollments:
-  # {
-  #   "district_A" => { kindergarten => { year1 => %, year2 => %, ... },
-  #                     high_school  => { year1 => %, year2 => %, ... }
-  #                    }
-  #   "district_B" => { kindergarten => { year1 => %, year2 => %, ... },
-  #                     high_school  => { year1 => %, year2 => %, ... }
-  #                    }
-  #   ...
-  # }
-
   def clean_percentage(number, data_format, poverty_level)
     if number =~ /^\d+\.?\d*$/
       return number.to_i if data_format == :currency
@@ -177,23 +166,4 @@ class DataLoader
       end
     end
   end
-end
-
-if __FILE__ == $0
-  # dl = DataLoader.new
-  # puts dl.load_enrollments_csv({
-  #   :enrollment => {
-  #     :kindergarten => "test/fixtures/small_kg_fixture.csv",
-  #     :high_school_graduation => "test/fixtures/small_hs_fixture.csv"
-  #   }
-  # })
-  # dl = DataLoader.new.load_enrollments_csv({
-  #   :enrollment => {
-  #     :kindergarten => "test/fixtures/kindergarten_fixture.csv"
-  #   }
-  # })
-  # puts "enrollments at bottom"
-  # puts dl
-  # puts dl.count
-
 end

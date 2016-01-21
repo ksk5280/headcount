@@ -22,7 +22,6 @@ class DataLoaderTest < Minitest::Test
     assert_equal expected, actual
   end
 
-meta t: true
   def test_load_enrollments_csv_file_and_create_enrollments_hash
     enrollments = DataLoader.new.load_enrollments_csv({
       :enrollment => {

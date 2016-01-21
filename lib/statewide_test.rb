@@ -91,6 +91,7 @@ class StatewideTest
   def race_error_check(subject, race, year)
     raise UnknownDataError unless SUBJECTS.include?(subject) && RACES.include?(race) && years(subject).include?(year)
   end
+  
   def years(subject)
     subjects.fetch(subject).keys
   end

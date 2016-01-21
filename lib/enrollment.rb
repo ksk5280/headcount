@@ -17,7 +17,6 @@ class Enrollment
 
   def kindergarten_participation_by_year
     kindergarten_participation
-    # returns a hash with keys as years and values as truncated percentage
   end
 
   def kindergarten_participation_in_year(year)
@@ -33,15 +32,4 @@ class Enrollment
   def graduation_rate_in_year(year)
     graduation_rate_by_year.fetch(year)
   end
-end
-
-if __FILE__ == $0
-  er = EnrollmentRepository.new
-  er.load_data({
-    :enrollment => {
-      :kindergarten => "test/fixtures/small_kg_fixture.csv",
-      :high_school_graduation => "test/fixtures/small_hs_fixture.csv"
-    }
-  })
-  er.find_by_name('COLORADO')
 end

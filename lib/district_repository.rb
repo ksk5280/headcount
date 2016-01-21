@@ -65,22 +65,3 @@ class DistrictRepository
     matching_districts.keys
   end
 end
-
-if __FILE__ == $0
-  dr = DistrictRepository.new
-  # start = Time.now
-  # district = dr.find_by_name("COLORADO")
-  # p district.enrollment
-  file = "test/fixtures/kindergarten_edge_cases.csv"
-  # file = "data/Kindergartners in full-day program.csv"
-  puts dr.load_data({
-    :enrollment => {
-      :kindergarten => file
-    }
-  })
-  # p "number of districs = #{dr.districts.count}"
-  # finish = Time.now
-  # p "time (s): #{finish - start}"
-  # p dr.find_by_name("Colorado")
-  #   .enrollment.kindergarten_participation_in_year(2010)
-end
