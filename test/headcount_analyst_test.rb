@@ -161,7 +161,6 @@ class HeadcountAnalystTest < Minitest::Test
     assert_in_delta 0.002, actual, 0.005
   end
 
-meta t: true
   def test_weighted_average_growth
     dr = district_repository_with_testing_data
     ha = HeadcountAnalyst.new(dr)
