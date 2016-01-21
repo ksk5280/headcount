@@ -90,19 +90,12 @@ class DataLoader
       data_format = :currency
     end
     data_format
-  end
-
-  def start_hash(district)
-    unless enrollments.has_key?(district)
-      enrollments[district] = {}
     end
-  end
 
   def create_enrollments_hash(district, year, percentage)
     unless enrollments.has_key?(district)
       enrollments[district] = {}
     end
-    start_hash(district)
     unless enrollments[district].has_key?(type)
       enrollments[district][type] = {}
     end
