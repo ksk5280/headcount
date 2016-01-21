@@ -11,22 +11,32 @@ class HeadcountAnalyst
     @district_hash = district_repo.districts
   end
 
-  def kindergarten_participation_rate_variation(district1_name, compared)
-    rate_variation(district1_name, compared, :kindergarten)
+  def kindergarten_participation_rate_variation(d1_name, compared)
+    rate_variation(d1_name, compared, :kindergarten)
   end
 
-  def graduation_rate_variation(district1_name, compared)
-    rate_variation(district1_name, compared, :high_school_graduation)
+  def graduation_rate_variation(d1_name, compared)
+    rate_variation(d1_name, compared, :high_school_graduation)
   end
 
-  def rate_variation(district1_name, compared, type)
-    district1_average = find_average(district1_name, type)
-    district2_name = compared.fetch(:against)
-    district2_average = find_average(district2_name, type)
-    district1_average / district2_average
+  def rate_variation(d1_name, compared, type)
+    d1_avg = find_average(d1_name, type)
+    d2_name = compared.fetch(:against)
+    d2_avg = find_average(d2_name, type)
+    d1_avg / d2_avg
   end
 
   def find_average(district_name, school_age)
+    participation = district_hash.fetch(district_name).fetch(school_age)
+    district_sum = participation.values.reduce(0, :+)
+    district_sum / participation.keys.count
+  end
+
+  def kindergarten_participation_rate_variation_trend(d1_name, compared)
+    d1_participation = district_hash.fetch(d1_name).fetch(:kindergarten)
+    d2_name = compared.fetch(:against)
+    d2_participation = district_hash.fetch(d2_name).fetch(:kindergarten)
+    d1_participation.merge(d2_participation) { |year, d1, d2| ( d1 / d2 ).round(3) }
     district_participation =
       district_hash.fetch(district_name).fetch(school_age)
     district_sum = district_participation.values.reduce(0, :+)
@@ -46,6 +56,9 @@ class HeadcountAnalyst
 
   def kindergarten_participation_against_high_school_graduation(district_name)
     return 0 if district_hash.fetch(district_name).fetch(:kindergarten).empty? || district_hash.fetch(district_name).fetch(:high_school_graduation).empty?
+    kg_variation = kindergarten_participation_rate_variation(district_name, :against => "COLORADO")
+    grad_variation = graduation_rate_variation(district_name, :against => "COLORADO")
+    kg_variation / grad_variation
 
     kindergarten_variation =
       kindergarten_participation_rate_variation(district_name,
@@ -55,16 +68,16 @@ class HeadcountAnalyst
     kindergarten_variation / graduation_variation
   end
 
-  def kindergarten_participation_correlates_with_high_school_graduation(district_correlation)
-    if district_correlation.key?(:for)
-      district_name = district_correlation.fetch(:for)
-      if district_name == 'STATEWIDE'
+  def kindergarten_participation_correlates_with_high_school_graduation(correlation)
+    if correlation.key?(:for)
+      name = correlation.fetch(:for)
+      if name == 'STATEWIDE'
         correlation_for_statewide
       else
-        correlation_for_one_district(district_name)
+        correlation_for_one_district(name)
       end
     else
-      district_array = district_correlation.fetch(:across)
+      district_array = correlation.fetch(:across)
       correlation_across_districts(district_array)
     end
   end
@@ -83,9 +96,8 @@ class HeadcountAnalyst
   def correlation_across_districts(district_array)
     correlations = district_array.select do |district|
       kindergarten_participation_against_high_school_graduation(district).between?(0.6, 1.5)
-      #yields an array of correlations for all districts provided
     end
-    return true if correlations.count/
+    return true if correlations.count /
     (district_array.count) > 0.7
   end
 

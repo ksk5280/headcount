@@ -51,13 +51,13 @@ class EnrollmentRepositoryTest < Minitest::Test
   end
 
   def test_it_returns_nil_if_name_not_found
-  er = EnrollmentRepository.new
-  er.load_data({
-    :enrollment => {
-      :kindergarten => "test/fixtures/kindergarten_fixture.csv"
-    }
-  })
-  assert_equal nil, er.find_by_name("PIZZA")
+    er = EnrollmentRepository.new
+    er.load_data({
+      :enrollment => {
+        :kindergarten => "test/fixtures/kindergarten_fixture.csv"
+      }
+    })
+    assert_equal nil, er.find_by_name("PIZZA")
   end
 
   def test_it_can_find_by_name_lower_case_names

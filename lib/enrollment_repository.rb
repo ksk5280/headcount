@@ -21,15 +21,3 @@ class EnrollmentRepository
     end
   end
 end
-
-if __FILE__ == $0
-  er = EnrollmentRepository.new
-  er.load_data({
-    :enrollment => {
-      :kindergarten => "test/fixtures/small_kg_fixture.csv",
-      :high_school_graduation => "test/fixtures/small_hs_fixture.csv"
-    }
-  })
-  puts er.enrollments
-  puts er.find_by_name("ADAMS COUNTY 14")
-end

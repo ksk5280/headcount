@@ -51,15 +51,12 @@ class DataLoader
 
   def parse_data(data, type)
     data.each do |row|
-
       district = row[:location].upcase
-
       year = format_year(row[:timeframe])
-
       data_format = clean_data_format(row[:dataformat])
+      percentage = clean_percentage(row[:data], data_format, row[:poverty_level])
       percentage = clean_percentage(row[:data],
                    data_format, row[:poverty_level])
-
       if type == :enrollment
         create_enrollments_hash(district, year, percentage)
       elsif type == :statewide_testing
@@ -93,15 +90,7 @@ class DataLoader
       data_format = :currency
     end
     data_format
-  end
-
-  def create_hash(*args, hash)
-    args.each do |arg|
-      if !hash.has_key? arg
-        hash[arg] = {}
-      end
     end
-  end
 
   def create_enrollments_hash(district, year, percentage)
     unless enrollments.has_key?(district)
