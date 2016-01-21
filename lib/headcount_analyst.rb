@@ -88,15 +88,35 @@ class HeadcountAnalyst
     (district_array.count) > 0.7
   end
 
-  def top_statewide_test_year_over_year_growth(data)
-    grade = data[:grade]
+  def error_check(grade)
     raise InsufficientInformationError, "A grade must be provided to answer this question" if grade.nil?
     raise UnknownDataError, "#{grade} is not a known grade" unless GRADES.include?(grade)
+  end
+  
+  def district_yoy_growth(district, grade, subject)
+    grade_hash = clean_district_hash(district, grade, subject)
+    return nil if grade_hash.empty?
+    years = grade_hash.keys.sort
+    if years.count >= 2
+      last_year_data = grade_hash.fetch(years.last).fetch(subject)
+      first_year_data = grade_hash.fetch(years.first).fetch(subject)
+      avg_percent_growth = (last_year_data - first_year_data) / (years.last - years.first)
+    end
+    avg_percent_growth
+  end
 
+  def top_statewide_test_year_over_year_growth(data)
+    grade = data[:grade]
+    error_check(grade)
     grade = symbolize_grade(grade)
     subject = data[:subject]
     weighting = data[:weighting]
     @district_growth = []
+    avg_yoy_growth_across_subjects(subject, grade, weighting)
+    top_check(data)
+  end
+
+  def avg_yoy_growth_across_subjects(subject, grade, weighting)
     district_hash.each_key do |district|
       if subject == nil
         subjects = [:math, :reading, :writing]
@@ -125,6 +145,9 @@ class HeadcountAnalyst
         district_growth << [ district, avg_percent_growth ]
       end
     end
+  end
+
+  def top_check(data)
     if data[:top]
       num = data[:top]
       sorted = district_growth.sort_by {|growth_arr| growth_arr[1] }
@@ -134,17 +157,6 @@ class HeadcountAnalyst
     end
   end
 
-  def district_yoy_growth(district, grade, subject)
-    grade_hash = clean_district_hash(district, grade, subject)
-    return nil if grade_hash.empty?
-    years = grade_hash.keys.sort
-    if years.count >= 2
-      last_year_data = grade_hash.fetch(years.last).fetch(subject)
-      first_year_data = grade_hash.fetch(years.first).fetch(subject)
-      avg_percent_growth = (last_year_data - first_year_data) / (years.last - years.first)
-    end
-    avg_percent_growth
-  end
 
   def symbolize_grade(grade)
     { 3 => :third_grade, 8 => :eighth_grade }[grade]

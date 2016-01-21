@@ -65,8 +65,7 @@ class StatewideTest
   end
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
-    raise UnknownDataError unless SUBJECTS.include?(subject) && GRADE.include?(grade) && years(subject).include?(year)
-
+    grade_error_check(subject, grade, year)
     grades = proficient_by_grade(grade)
     if grades.fetch(year).empty?
       'N/A'
@@ -76,8 +75,7 @@ class StatewideTest
   end
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
-    raise UnknownDataError unless SUBJECTS.include?(subject) && RACES.include?(race) && years(subject).include?(year)
-
+    race_error_check(subject, race, year)
     races = proficient_by_race_or_ethnicity(race)
     if races.fetch(year).empty?
       'N/A'
@@ -86,6 +84,13 @@ class StatewideTest
     end
   end
 
+  def grade_error_check(subject, grade, year)
+    raise UnknownDataError unless SUBJECTS.include?(subject) && GRADE.include?(grade) && years(subject).include?(year)
+  end
+
+  def race_error_check(subject, race, year)
+    raise UnknownDataError unless SUBJECTS.include?(subject) && RACES.include?(race) && years(subject).include?(year)
+  end
   def years(subject)
     subjects.fetch(subject).keys
   end
