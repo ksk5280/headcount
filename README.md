@@ -1,6 +1,8 @@
-## Headcount
+# Headcount
 
-Find the assignment [here](https://github.com/turingschool/curriculum/blob/master/source/projects/headcount.markdown)
+## Turing School: Module 1, Project 6
+
+[Original assignment](https://github.com/turingschool/curriculum/blob/master/source/projects/headcount.markdown)
 
 
 ##### District Class:
