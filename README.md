@@ -1,13 +1,29 @@
 # Headcount
 
-## Turing School: Module 1, Project 6
+## Turing School: Module 1, Final Project
+
+### Kimiko Kano and David Whitaker
 
 [Original assignment](https://github.com/turingschool/curriculum/blob/master/source/projects/headcount.markdown)
 
+### Project Overview
+
+In this project, Colorado school data was analyzed to see what we could learn about education around the state. The data was divided into multiple CSV files, with a __District__ being the unifying piece of information across the various data files. The files could be categorized into three groups: 
+
+* __Enrollment__ - Information about enrollment rates across various
+grade levels in each district
+* __Statewide Testing__ - Information about test results in each district
+broken down by grade level, race, and ethnicity
+* __Economic Profile__ - Information about socioeconomic profiles of
+students and within districts
+
+Starting with the CSV data we:
+* built a "Data Access Layer" which allows us to query/search the underlying data
+* built a "Relationships Layer" which creates connections between related data
+* built an "Analysis Layer" which uses the data and relationships to draw conclusions
 
 ##### District Class:
-A district is only created when you call the ```find_by_name``` method in the ```DistrictRepository``` class.
-
+A district is created when you call the ```find_by_name``` method in the ```DistrictRepository``` class.
 
 * A ```DistrictRepository``` object is created and the ```load_data``` method is called on it.
 ```ruby
@@ -20,14 +36,11 @@ A district is only created when you call the ```find_by_name``` method in the ``
   })
   district = dr.find_by_name('COLORADO')
   ```
-* When the ```load_data``` method is called:
+* In this example, when the ```load_data``` method is called:
   1. An ```EnrollmentRepository``` object is created
   2. The csv data is loaded by the ```DataLoader``` class
-  3. ```DataLoader``` parses the data into the hash in the correct format.
-* , which creates and enrollments hash into which the data is stored.
+  3. ```DataLoader``` parses the data into an enrollments hash.
 
-
-* loads the kindergarten and high school data into a hash
 * the following ```data``` is passed into the ```District``` object as an argument, creating a ```name``` and an ```enrollment```:
 ```ruby
   {:name => "COLORADO",
