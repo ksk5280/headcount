@@ -22,7 +22,7 @@ Starting with the CSV data we:
 * built a "Relationships Layer" which creates connections between related data
 * built an "Analysis Layer" which uses the data and relationships to draw conclusions
 
-##### District Class:
+##### District Class
 A district is created when you call the ```find_by_name``` method in the ```DistrictRepository``` class.
 
 * A ```DistrictRepository``` object is created and the ```load_data``` method is called on it.
@@ -71,8 +71,22 @@ A district is created when you call the ```find_by_name``` method in the ```Dist
      @name="COLORADO">
   }
 ```
+* Data for creating a Statewide Test Repository and Economic Profile Repository can be loaded in a similar manner.
 
-In HeadcountAnalyst Class:
+##### HeadcountAnalyst Class
+
+The HeadcountAnalyst Class contains the following methods:
+
+`.kindergarten_participation_rate_variation(district_name, compared)`
+
+=> the result is the district average divided by the compared district's average
+
+Assuming we have a `dr` that's an instance of `DistrictRepository`, a `HeadcountAnalyst` is initialized like this:
+
+```ruby
+ha = HeadcountAnalyst.new(dr)
+```
+
 ```ruby
   district_repos.districts =
     {"COLORADO"=>
