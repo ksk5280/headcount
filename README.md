@@ -160,3 +160,6 @@ Assuming we have a `dr` that's an instance of `DistrictRepository`, a `Headcount
 ```ruby
 ha = HeadcountAnalyst.new(dr)
 ```
+
+### Testing
+This project was developed using Test Driven Development. There are 116 tests in total that can be run using the mrspec gem. Run the command `mrspec` from the terminal in the project's root directory.
