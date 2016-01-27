@@ -8,7 +8,7 @@
 
 ### Project Overview
 
-In this project, Colorado school data was analyzed to see what we could learn about education around the state. The data was divided into multiple CSV files, with a __District__ being the unifying piece of information across the various data files. The files could be categorized into three groups: 
+In this project, Colorado school data was analyzed to see what we could learn about education around the state. The data was divided into multiple CSV files, with a __District__ being the unifying piece of information across the various data files. The files could be categorized into three groups:
 
 * __Enrollment__ - Information about enrollment rates across various
 grade levels in each district
@@ -22,7 +22,7 @@ Starting with the CSV data we:
 * built a "Relationships Layer" which creates connections between related data
 * built an "Analysis Layer" which uses the data and relationships to draw conclusions
 
-##### District Class
+#### District Class
 A district is created when you call the ```find_by_name``` method in the ```DistrictRepository``` class.
 
 * A ```DistrictRepository``` object is created and the ```load_data``` method is called on it.
@@ -73,46 +73,90 @@ A district is created when you call the ```find_by_name``` method in the ```Dist
 ```
 * Data for creating a Statewide Test Repository and Economic Profile Repository can be loaded in a similar manner.
 
-##### HeadcountAnalyst Class
+#### HeadcountAnalyst Class
 
 The HeadcountAnalyst Class contains the following methods:
 
-`.kindergarten_participation_rate_variation(district_name, compared)`
+##### Kindergarten Participation Rate Variation Between Districts
 
-=> the result is the district average divided by the compared district's average
+`.kindergarten_participation_rate_variation(district1_name, :against => district2_name)`
+
+=> returns the first district's average divided by the second district's average.
+
+##### Kindergarten Participation Rate Variation Compared to the State Average
+
+`.kindergarten_participation_rate_variation(district1_name, :against => 'COLORADO')`
+
+=> returns a district's average compared against the state average.
+
+##### Kindergarten Participation Rate Trend
+
+`.kindergarten_participation_rate_variation_trend(district_name, :against => 'COLORADO')`
+
+=> returns a hash of the averages broken down for each year
+
+##### Kindergarten Participation Compared to High School Graduation
+
+`.kindergarten_participation_against_high_school_graduation(district_name)`
+
+=> returns the quotient of kindergarten variation and high school graduation variation, where the variation is the quotient of a district's participation compared to the statewide average.
+
+##### Kindergarten Participation vs. High School Graduation Correlation
+
+`.kindergarten_participation_correlates_with_high_school_graduation(for: district_name)`
+
+=> returns true if the correlation is between 0.6 and 1.5
+
+=> if the `district_name` is `STATEWIDE`, returns true if over 70% of districts have a correlation.
+
+=> the correlation can also be performed `:across` an array of districts.
+
+##### Statewide Test Year Over Year Growth
+
+`.top_statewide_test_year_over_year_growth(data)`
+
+This method takes in data which can be in different forms:
+
+##### Finding a single leader
+
+```ruby
+ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
+=> ['the top district name', 0.123]
+```
+
+Where `0.123` is their average percentage growth across years. If there are three years of proficiency data (year1, year2, year3), that's `((proficiency at year3) - (proficiency at year1)) / (year3 - year1)`.
+
+##### Finding multiple leaders
+
+Let's say we want to be able to find several top districts using the same calculations:
+
+```ruby
+ha.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
+=> [['top district name', growth_1], ['second district name', growth_2], ['third district name', growth_3]]
+```
+
+Where `growth_1` through `growth_3` represents their average growth across years.
+
+##### Across all subjects
+
+What about growth across all three subject areas?
+
+```ruby
+ha.top_statewide_test_year_over_year_growth(grade: 3)
+=> ['the top district name', 0.111]
+```
+
+Where `0.111` is the district's average percentage growth across years across subject areas.
+
+But that considers all three subjects in equal proportion. No Child Left Behind guidelines generally emphasize reading and math, so let's add the ability to weight subject areas:
+
+```ruby
+ha.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
+=> ['the top district name', 0.111]
+```
 
 Assuming we have a `dr` that's an instance of `DistrictRepository`, a `HeadcountAnalyst` is initialized like this:
 
 ```ruby
 ha = HeadcountAnalyst.new(dr)
-```
-
-```ruby
-  district_repos.districts =
-    {"COLORADO"=>
-      {:kindergarten=>
-        {2007=>0.39465,
-         2006=>0.33677,
-         2005=>0.27807,
-         etc...      },
-       :high_school_graduation=>
-        {2010=>0.724,
-         2011=>0.739,
-         2012=>0.75354,
-         etc...      },
-      },
-     "ACADEMY 20"=>
-      {:kindergarten=>
-        {2007=>0.39159,
-         2006=>0.35364,
-         2005=>0.26709,
-         etc...      },
-       :high_school_graduation=>
-        {2010=>0.895,
-         2011=>0.895,
-         2012=>0.88983
-         etc...      },
-      },
-      etc...
-    }
 ```
